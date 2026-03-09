@@ -467,15 +467,35 @@ function initGoogleAuth() {
       return;
     }
     google.accounts.id.initialize({
-      client_id       : GOOGLE_CONFIG.CLIENT_ID,
-      callback        : handleGoogleSignInResponse,
-      auto_select     : true,
-      cancel_on_tap_outside: false
+      client_id            : GOOGLE_CONFIG.CLIENT_ID,
+      callback             : handleGoogleSignInResponse,
+      auto_select          : false,
+      cancel_on_tap_outside: true,
+      use_fedcm_for_prompt : true,
+      itp_support          : true
     });
 
-    // Try silent sign-in first
+    // Render login button vào element có id="googleSignInBtn"
+    const btnContainer = document.getElementById('googleSignInBtn');
+    if (btnContainer) {
+      google.accounts.id.renderButton(btnContainer, {
+        type     : 'standard',
+        theme    : 'outline',
+        size     : 'large',
+        text     : 'signin_with',
+        shape    : 'pill',
+        logo_alignment: 'left',
+        width    : '300'
+      });
+    }
+
+    // Thử silent sign-in (One Tap) — chỉ hiện nếu user đã từng login
     google.accounts.id.prompt((notification) => {
-      if (notification.isNotDisplayed() || notification.isSkippedMoment()) {
+      if (
+        notification.isNotDisplayed()  ||
+        notification.isSkippedMoment() ||
+        notification.isDismissedMoment()
+      ) {
         showLoginScreen();
       }
     });
@@ -6489,3 +6509,4 @@ if (document.readyState === 'loading') {
 //       Glossary, Sentiment, Comparison, PWA, Events, Init
 
 // ===================================================================
+
