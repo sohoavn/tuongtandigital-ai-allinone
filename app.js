@@ -15,9 +15,9 @@
 const APP_VERSION = '3.0.0';
 const APP_NAME    = 'TuongTanDigital-AI';
 
-/** Google OAuth 2.0 — Replace with your real Client ID YOUR_GOOGLE_CLIENT_ID.apps.googleusercontent.com */
+/** Google OAuth 2.0 — Replace with your real Client ID */
 const GOOGLE_CONFIG = {
-  CLIENT_ID   : '59412171597-dp8srl0uktif7vh5pbi8412u8ep1b2m2.apps.googleusercontent.com',
+  CLIENT_ID   : 'YOUR_GOOGLE_CLIENT_ID.apps.googleusercontent.com',
   REDIRECT_URI: window.location.origin,
   SCOPES      : 'openid email profile'
 };
@@ -78,8 +78,8 @@ const DEFAULT_TTS_VOICE = 'Aoede';
 /** Default flashcard count */
 const DEFAULT_FLASHCARD_COUNT = 10;
 
-/** Google Apps Script License Validation endpoint — Replace with your deployed URL YOUR_APPS_SCRIPT_WEB_APP_URL*/
-const LICENSE_API_URL = 'https://script.google.com/macros/s/AKfycby8gzoAzHHNlrqZDM_ym_xSruooZp19sDMiGncZv6n4DoaSyW_bsjRbtCUz08vio8pY/exec';
+/** Google Apps Script License Validation endpoint — Replace with your deployed URL */
+const LICENSE_API_URL = 'YOUR_APPS_SCRIPT_WEB_APP_URL';
 
 /** Themes */
 const THEMES = ['light','dark','blue','purple'];
@@ -460,175 +460,29 @@ async function restoreStateFromIDB() {
  * Initialize Google Identity Services.
  * Called once the GSI script is loaded (callback from HTML).
  */
-// ============================================================
-// SECTION 12: GOOGLE AUTH - FedCM Button Flow (2025 Standard)
-// Fix: Cross-Origin-Opener-Policy + FedCM migration warning
-// ============================================================
-
 function initGoogleAuth() {
-  // Lấy Client ID từ config
-  const clientId = window.APP_CONFIG?.GOOGLE_CLIENT_ID || '';
-
-  if (!clientId || clientId === 'YOUR_GOOGLE_CLIENT_ID') {
-    console.warn('[Auth] Google Client ID chưa được cấu hình. Xem CONFIG_GUIDE.md');
-    showLoginFallbackMessage();
-    return;
-  }
-
-  // Chờ Google Identity Services SDK load xong
-  if (typeof google === 'undefined' || !google?.accounts?.id) {
-    console.log('[Auth] Chờ Google SDK...');
-    setTimeout(initGoogleAuth, 300);
-    return;
-  }
-
   try {
-    // ✅ BƯỚC 1: Initialize với FedCM enabled
-    // - use_fedcm_for_prompt: true  → One Tap dùng FedCM (không popup)
-    // - use_fedcm_for_button: true  → Button cũng dùng FedCM (không popup)
-    // → Hoàn toàn loại bỏ COOP error vì browser tự xử lý, không còn window.postMessage
-    google.accounts.id.initialize({
-      client_id: clientId,
-      callback: handleGoogleCredentialResponse,
-      use_fedcm_for_prompt: true,   // Fix COOP cho One Tap
-      use_fedcm_for_button: true,   // Fix COOP cho Button (Chrome M125+ desktop, M128+ Android)
-      auto_select: false,           // Không tự đăng nhập, tránh UX bất ngờ
-      cancel_on_tap_outside: true,
-      context: 'signin',
-      itp_support: true,            // Hỗ trợ Safari ITP
-    });
-
-    // ✅ BƯỚC 2: Render Sign In With Google Button (FedCM native UI)
-    // Browser sẽ hiển thị Google's native account chooser — không có popup window
-    const buttonContainer = document.getElementById('googleSignInBtn');
-    if (buttonContainer) {
-      // Xóa nội dung cũ nếu có (tránh render đè)
-      buttonContainer.innerHTML = '';
-
-      google.accounts.id.renderButton(buttonContainer, {
-        type: 'standard',          // Hiển thị đầy đủ text + logo
-        theme: 'outline',          // Phong cách viền (phù hợp với mọi background)
-        size: 'large',             // Kích thước lớn, dễ bấm trên mobile
-        text: 'signin_with',       // "Sign in with Google"
-        shape: 'rectangular',      // Bo góc vuông
-        logo_alignment: 'left',    // Logo Google căn trái
-        width: 280,                // Chiều rộng cố định (px)
-        locale: 'vi',              // Hiển thị tiếng Việt nếu có
-      });
-
-      console.log('[Auth] ✅ Google Sign-In Button (FedCM) đã render thành công');
-    } else {
-      console.error('[Auth] ❌ Không tìm thấy element #googleSignInBtn trong HTML');
+    if (typeof google === 'undefined' || !google.accounts) {
+      console.warn('[Auth] Google Identity Services SDK not loaded yet.');
+      return;
     }
-
-    // ✅ BƯỚC 3: Hiển thị One Tap (FedCM mode - không popup)
-    // Chỉ hiện nếu user chưa login. FedCM sẽ tự xử lý, không cần callback phức tạp
-    google.accounts.id.prompt((notification) => {
-      // Với FedCM: isDisplayMoment(), isDisplayed(), isNotDisplayed(), getNotDisplayedReason()
-      // đã bị deprecated và không còn hoạt động → Chỉ dùng isDismissedMoment()
-      if (notification.isDismissedMoment()) {
-        const reason = notification.getDismissedReason();
-        console.log('[Auth] One Tap dismissed, reason:', reason);
-        // credential_returned = đăng nhập thành công qua One Tap
-        // cancel_called / flow_restarted = user đóng prompt
-      }
-      // isSkippedMoment() vẫn hoạt động một phần với FedCM
-      if (notification.isSkippedMoment()) {
-        console.log('[Auth] One Tap skipped (browser cooldown hoặc user từ chối)');
-      }
+    google.accounts.id.initialize({
+      client_id       : GOOGLE_CONFIG.CLIENT_ID,
+      callback        : handleGoogleSignInResponse,
+      auto_select     : true,
+      cancel_on_tap_outside: false
     });
 
-  } catch (error) {
-    console.error('[Auth] Lỗi khởi tạo Google Sign-In:', error);
-    showLoginFallbackMessage();
+    // Try silent sign-in first
+    google.accounts.id.prompt((notification) => {
+      if (notification.isNotDisplayed() || notification.isSkippedMoment()) {
+        showLoginScreen();
+      }
+    });
+  } catch (err) {
+    console.error('[initGoogleAuth]', err);
+    showLoginScreen();
   }
-}
-
-// ============================================================
-// Hàm xử lý callback khi đăng nhập thành công
-// Được gọi bởi cả One Tap lẫn Button flow
-// ============================================================
-function handleGoogleCredentialResponse(response) {
-  if (!response?.credential) {
-    console.error('[Auth] Không nhận được credential từ Google');
-    return;
-  }
-
-  try {
-    // Giải mã JWT ID Token (base64 decode phần payload)
-    const base64Payload = response.credential.split('.')[1];
-    // Thêm padding nếu cần (JWT base64url không có padding)
-    const paddedPayload = base64Payload + '='.repeat((4 - base64Payload.length % 4) % 4);
-    const payload = JSON.parse(atob(paddedPayload));
-
-    const userInfo = {
-      id: payload.sub,            // Google User ID duy nhất
-      email: payload.email,
-      name: payload.name,
-      picture: payload.picture,
-      given_name: payload.given_name,
-      family_name: payload.family_name,
-      email_verified: payload.email_verified,
-      credential: response.credential,  // Lưu JWT để verify sau
-      loginTime: Date.now(),
-      select_by: response.select_by,    // 'fedcm', 'fedcm_auto', 'btn', etc.
-    };
-
-    console.log('[Auth] ✅ Đăng nhập thành công:', userInfo.email, '| Method:', userInfo.select_by);
-
-    // Lưu vào localStorage để duy trì session
-    localStorage.setItem('ttd_user', JSON.stringify({
-      id: userInfo.id,
-      email: userInfo.email,
-      name: userInfo.name,
-      picture: userInfo.picture,
-      loginTime: userInfo.loginTime,
-    }));
-
-    // Cập nhật UI: ẩn login screen, hiển thị app
-    onLoginSuccess(userInfo);
-
-  } catch (error) {
-    console.error('[Auth] Lỗi xử lý credential:', error);
-  }
-}
-
-// ============================================================
-// Hàm hiện thông báo fallback khi chưa config Client ID
-// ============================================================
-function showLoginFallbackMessage() {
-  const buttonContainer = document.getElementById('googleSignInBtn');
-  if (buttonContainer) {
-    buttonContainer.innerHTML = `
-      <div style="
-        padding: 12px 16px;
-        background: #fff3cd;
-        border: 1px solid #ffc107;
-        border-radius: 8px;
-        color: #856404;
-        font-size: 13px;
-        text-align: center;
-        max-width: 280px;
-      ">
-        ⚠️ Chưa cấu hình Google Client ID.<br>
-        Xem hướng dẫn trong <strong>CONFIG_GUIDE.md</strong>
-      </div>
-    `;
-  }
-}
-
-// ============================================================
-// Hàm đăng xuất (gọi khi user click logout)
-// ============================================================
-function signOutGoogle() {
-  const user = getCurrentUser();
-  if (user?.email) {
-    // Báo cho Google biết user đã logout để tắt auto-select
-    google?.accounts?.id?.disableAutoSelect();
-    console.log('[Auth] Google disableAutoSelect() called');
-  }
-  localStorage.removeItem('ttd_user');
-  onLogoutSuccess();
 }
 
 /**
@@ -6633,7 +6487,4 @@ if (document.readyState === 'loading') {
 // Core: State, Config, IDB, Auth, License, API, Notebook,
 //       Chat, TTS, STT, Flashcard, Quiz, Podcast, MindMap,
 //       Glossary, Sentiment, Comparison, PWA, Events, Init
-
 // ===================================================================
-
-
