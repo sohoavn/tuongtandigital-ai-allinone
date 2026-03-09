@@ -17,7 +17,7 @@ const APP_NAME    = 'TuongTanDigital-AI';
 
 /** Google OAuth 2.0 — Replace with your real Client ID */
 const GOOGLE_CONFIG = {
-  CLIENT_ID   : 'YOUR_GOOGLE_CLIENT_ID.apps.googleusercontent.com',
+  CLIENT_ID   : '59412171597-dp8srl0uktif7vh5pbi8412u8ep1b2m2.apps.googleusercontent.com',
   REDIRECT_URI: window.location.origin,
   SCOPES      : 'openid email profile'
 };
@@ -79,7 +79,7 @@ const DEFAULT_TTS_VOICE = 'Aoede';
 const DEFAULT_FLASHCARD_COUNT = 10;
 
 /** Google Apps Script License Validation endpoint — Replace with your deployed URL */
-const LICENSE_API_URL = 'YOUR_APPS_SCRIPT_WEB_APP_URL';
+const LICENSE_API_URL = 'https://script.google.com/macros/s/AKfycby8gzoAzHHNlrqZDM_ym_xSruooZp19sDMiGncZv6n4DoaSyW_bsjRbtCUz08vio8pY/exec';
 
 /** Themes */
 const THEMES = ['light','dark','blue','purple'];
@@ -6488,3 +6488,4 @@ if (document.readyState === 'loading') {
 //       Chat, TTS, STT, Flashcard, Quiz, Podcast, MindMap,
 //       Glossary, Sentiment, Comparison, PWA, Events, Init
 // ===================================================================
+
