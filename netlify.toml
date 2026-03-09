@@ -1,57 +1,54 @@
 # ============================================================
 # TuongTanDigital-AI v3.0 — Netlify Configuration
-# Fixed: COOP header blocking Google Sign-In popup
-# Fixed: CSP allowing Google Identity Services
 # ============================================================
 
 [build]
   publish = "."
-  command = "echo 'Static site — no build needed'"
 
-# Redirect all routes to index.html (SPA support)
-[[redirects]]
-  from   = "/*"
-  to     = "/index.html"
-  status = 200
-
-# ===== MAIN HEADERS — áp dụng cho toàn bộ app =====
+# ============================================================
+# Headers cho trang chính (HTML pages)
+# FedCM không cần COOP unsafe-none nữa vì không dùng popup
+# ============================================================
 [[headers]]
   for = "/*"
   [headers.values]
-
-    # QUAN TRỌNG: COOP phải là unsafe-none để Google popup hoạt động
-    # Nếu set "same-origin" thì Google Sign-In popup BỊ CHẶN
-    Cross-Origin-Opener-Policy   = "unsafe-none"
+    # COOP: same-origin-allow-popups
+    # - Tốt hơn unsafe-none về bảo mật
+    # - Cho phép popup từ same-origin (cần cho OAuth redirect fallback)
+    # - FedCM button flow không bị ảnh hưởng bởi COOP vì browser tự xử lý
+    Cross-Origin-Opener-Policy = "same-origin-allow-popups"
     Cross-Origin-Embedder-Policy = "unsafe-none"
 
-    # Các header bảo mật khác (an toàn)
+    # Content Security Policy đầy đủ cho FedCM + Gemini
+    Content-Security-Policy = "default-src 'self'; script-src 'self' 'unsafe-inline' 'unsafe-eval' https://accounts.google.com https://apis.google.com https://ssl.gstatic.com https://www.gstatic.com; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com https://accounts.google.com; font-src 'self' https://fonts.gstatic.com; img-src 'self' data: blob: https://*.googleusercontent.com https://*.google.com https://www.gstatic.com https://ssl.gstatic.com; connect-src 'self' https://accounts.google.com https://generativelanguage.googleapis.com https://oauth2.googleapis.com https://www.googleapis.com https://script.google.com https://script.googleusercontent.com; frame-src https://accounts.google.com; worker-src 'self';"
+
+    # Cache control
     X-Content-Type-Options = "nosniff"
-    X-XSS-Protection       = "1; mode=block"
-    Referrer-Policy        = "strict-origin-when-cross-origin"
+    X-Frame-Options = "SAMEORIGIN"
+    Referrer-Policy = "strict-origin-when-cross-origin"
 
-    # CSP đầy đủ — cho phép tất cả Google domains cần thiết
-    Content-Security-Policy = "default-src 'self'; script-src 'self' 'unsafe-inline' 'unsafe-eval' https://accounts.google.com https://apis.google.com https://unpkg.com https://cdn.jsdelivr.net https://cdnjs.cloudflare.com https://mozilla.github.io https://www.gstatic.com; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com https://accounts.google.com https://www.gstatic.com; font-src 'self' https://fonts.gstatic.com data:; img-src * data: blob:; connect-src 'self' https://generativelanguage.googleapis.com https://accounts.google.com https://oauth2.googleapis.com https://www.googleapis.com https://script.google.com https://script.googleusercontent.com https://lh3.googleusercontent.com https://lh4.googleusercontent.com https://lh5.googleusercontent.com https://lh6.googleusercontent.com https://firebaseapp.com; frame-src https://accounts.google.com https://content.googleapis.com https://www.google.com; worker-src 'self' blob:; media-src 'self' blob: data: https:; object-src 'none';"
-
-# ===== Service Worker — không được cache =====
+# ============================================================
+# Cache tĩnh cho assets
+# ============================================================
 [[headers]]
-  for = "/sw.js"
+  for = "/icons/*"
   [headers.values]
-    Cache-Control                = "no-cache, no-store, must-revalidate"
-    Cross-Origin-Opener-Policy   = "unsafe-none"
-    Cross-Origin-Embedder-Policy = "unsafe-none"
+    Cache-Control = "public, max-age=31536000, immutable"
 
-# ===== Static assets — cache dài =====
 [[headers]]
-  for = "/style.css"
+  for = "/*.css"
   [headers.values]
     Cache-Control = "public, max-age=86400"
 
 [[headers]]
-  for = "/app.js"
+  for = "/*.js"
   [headers.values]
     Cache-Control = "public, max-age=86400"
 
-[[headers]]
-  for = "/manifest.json"
-  [headers.values]
-    Cache-Control = "public, max-age=86400"
+# ============================================================
+# SPA fallback (nếu dùng client-side routing)
+# ============================================================
+[[redirects]]
+  from = "/*"
+  to = "/index.html"
+  status = 200
