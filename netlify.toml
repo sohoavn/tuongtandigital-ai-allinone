@@ -4,51 +4,53 @@
 
 [build]
   publish = "."
+  command = "echo 'Static site — no build needed'"
 
-# ============================================================
-# Headers cho trang chính (HTML pages)
-# FedCM không cần COOP unsafe-none nữa vì không dùng popup
-# ============================================================
+# Redirect all routes to index.html (SPA support)
+[[redirects]]
+  from   = "/*"
+  to     = "/index.html"
+  status = 200
+
+# Security headers
 [[headers]]
   for = "/*"
   [headers.values]
-    # COOP: same-origin-allow-popups
-    # - Tốt hơn unsafe-none về bảo mật
-    # - Cho phép popup từ same-origin (cần cho OAuth redirect fallback)
-    # - FedCM button flow không bị ảnh hưởng bởi COOP vì browser tự xử lý
-    Cross-Origin-Opener-Policy = "same-origin-allow-popups"
-    Cross-Origin-Embedder-Policy = "unsafe-none"
+    X-Frame-Options            = "SAMEORIGIN"
+    X-XSS-Protection           = "1; mode=block"
+    X-Content-Type-Options     = "nosniff"
+    Referrer-Policy            = "strict-origin-when-cross-origin"
+    Permissions-Policy         = "camera=(), microphone=(self), geolocation=()"
+    Content-Security-Policy    = """
+      default-src 'self';
+      script-src 'self' 'unsafe-inline' https://accounts.google.com https://apis.google.com https://unpkg.com https://cdn.jsdelivr.net https://cdnjs.cloudflare.com;
+      style-src 'self' 'unsafe-inline' https://fonts.googleapis.com;
+      font-src 'self' https://fonts.gstatic.com;
+      img-src 'self' data: https: blob:;
+      connect-src 'self' https://generativelanguage.googleapis.com https://accounts.google.com https://script.google.com https://script.googleusercontent.com;
+      frame-src https://accounts.google.com;
+      worker-src 'self' blob:;
+      media-src 'self' blob: data:;
+    """
 
-    # Content Security Policy đầy đủ cho FedCM + Gemini
-    Content-Security-Policy = "default-src 'self'; script-src 'self' 'unsafe-inline' 'unsafe-eval' https://accounts.google.com https://apis.google.com https://ssl.gstatic.com https://www.gstatic.com; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com https://accounts.google.com; font-src 'self' https://fonts.gstatic.com; img-src 'self' data: blob: https://*.googleusercontent.com https://*.google.com https://www.gstatic.com https://ssl.gstatic.com; connect-src 'self' https://accounts.google.com https://generativelanguage.googleapis.com https://oauth2.googleapis.com https://www.googleapis.com https://script.google.com https://script.googleusercontent.com; frame-src https://accounts.google.com; worker-src 'self';"
-
-    # Cache control
-    X-Content-Type-Options = "nosniff"
-    X-Frame-Options = "SAMEORIGIN"
-    Referrer-Policy = "strict-origin-when-cross-origin"
-
-# ============================================================
-# Cache tĩnh cho assets
-# ============================================================
+# Cache static assets
 [[headers]]
-  for = "/icons/*"
+  for = "/style.css"
   [headers.values]
     Cache-Control = "public, max-age=31536000, immutable"
 
 [[headers]]
-  for = "/*.css"
+  for = "/app.js"
   [headers.values]
-    Cache-Control = "public, max-age=86400"
+    Cache-Control = "public, max-age=31536000, immutable"
 
 [[headers]]
-  for = "/*.js"
+  for = "/manifest.json"
   [headers.values]
     Cache-Control = "public, max-age=86400"
 
-# ============================================================
-# SPA fallback (nếu dùng client-side routing)
-# ============================================================
-[[redirects]]
-  from = "/*"
-  to = "/index.html"
-  status = 200
+# Service Worker — no cache
+[[headers]]
+  for = "/sw.js"
+  [headers.values]
+    Cache-Control = "no-cache, no-store, must-revalidate"
