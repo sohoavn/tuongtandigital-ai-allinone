@@ -1,0 +1,1848 @@
+<!DOCTYPE html>
+<html lang="vi" data-theme="default" data-dark="false">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+  <title>TuongTanDigital AI Suite — NotebookLM Nâng Cao</title>
+
+  <!-- SEO & Social Meta -->
+  <meta name="description" content="Bộ công cụ AI toàn diện: RAG Notebook, Phiên âm, TTS 30 giọng, Ghi hình, Chuyển đổi tài liệu. Powered by Gemini AI — by TuongTanDigital.">
+  <meta name="author" content="TuongTanDigital">
+  <meta name="copyright" content="© 2025 TuongTanDigital. All rights reserved.">
+  <meta name="keywords" content="AI, NotebookLM, Gemini, TTS, STT, RAG, TuongTanDigital, Vietnamese AI">
+  <meta property="og:title" content="TuongTanDigital AI Suite">
+  <meta property="og:description" content="Bộ công cụ AI toàn diện powered by Gemini — Miễn phí, Không cần backend">
+  <meta property="og:type" content="website">
+  <meta property="og:image" content="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 1200 630'><rect width='1200' height='630' fill='%234F46E5'/><text x='600' y='360' font-family='Arial Black' font-size='200' font-weight='900' fill='white' text-anchor='middle'>T</text></svg>">
+  <meta name="theme-color" content="#4F46E5">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="default">
+  <meta name="apple-mobile-web-app-title" content="TTD AI">
+
+  <!-- PWA Manifest -->
+  <link rel="manifest" href="manifest.json">
+
+  <!-- Favicon -->
+  <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><defs><linearGradient id='g' x1='0%25' y1='0%25' x2='100%25' y2='100%25'><stop offset='0%25' stop-color='%234F46E5'/><stop offset='100%25' stop-color='%237C3AED'/></linearGradient></defs><rect width='100' height='100' rx='22' fill='url(%23g)'/><text x='50' y='68' font-family='Arial Black,sans-serif' font-size='52' font-weight='900' fill='white' text-anchor='middle'>T</text></svg>">
+  <link rel="apple-touch-icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><rect width='100' height='100' rx='22' fill='%234F46E5'/><text x='50' y='68' font-family='Arial Black' font-size='52' font-weight='900' fill='white' text-anchor='middle'>T</text></svg>">
+
+  <!-- Google Identity Services (OAuth) -->
+  <script src="https://accounts.google.com/gsi/client" async defer></script>
+
+  <!-- Stylesheets -->
+  <link rel="stylesheet" href="style.css">
+</head>
+
+<body class="app-body" id="appBody">
+
+  <!-- ===================== SPLASH / AUTH SCREEN ===================== -->
+  <div class="splash-screen" id="splashScreen" role="dialog" aria-label="Đăng nhập">
+    <div class="splash-inner">
+      <div class="splash-logo">
+        <div class="splash-logo-icon">T</div>
+        <div class="splash-logo-text">
+          <h1>TuongTanDigital</h1>
+          <p>AI Suite — Powered by Gemini</p>
+        </div>
+      </div>
+
+      <div class="splash-tagline">
+        <span class="splash-badge">✨ NotebookLM Nâng Cao</span>
+        <h2>Công cụ AI toàn diện<br>cho công việc của bạn</h2>
+        <p>RAG Notebook · STT · TTS 30 giọng · Ghi hình · Chuyển đổi tài liệu</p>
+      </div>
+
+      <div class="splash-features">
+        <div class="splash-feature-item">
+          <span class="splash-feature-icon">📚</span>
+          <span>Phân tích tài liệu thông minh</span>
+        </div>
+        <div class="splash-feature-item">
+          <span class="splash-feature-icon">🎙️</span>
+          <span>Phiên âm & TTS cao cấp</span>
+        </div>
+        <div class="splash-feature-item">
+          <span class="splash-feature-icon">🤖</span>
+          <span>Gemini 2.5 · Hoàn toàn miễn phí</span>
+        </div>
+      </div>
+
+      <div class="splash-auth-box">
+        <!-- Google Sign-In Button (rendered by GIS SDK) -->
+        <div id="googleSignInBtn" class="google-signin-container"></div>
+
+        <!-- Fallback manual button -->
+        <button class="btn-google-signin" id="btnGoogleSignin" type="button">
+          <svg width="18" height="18" viewBox="0 0 24 24" aria-hidden="true">
+            <path d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z" fill="#4285F4"/>
+            <path d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z" fill="#34A853"/>
+            <path d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.07H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.93l2.85-2.22.81-.62z" fill="#FBBC05"/>
+            <path d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.07l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53z" fill="#EA4335"/>
+          </svg>
+          Đăng nhập bằng Google
+        </button>
+
+        <div class="splash-divider"><span>hoặc</span></div>
+
+        <button class="btn-guest-signin" id="btnGuestSignin" type="button">
+          👤 Dùng thử không cần đăng nhập
+        </button>
+
+        <p class="splash-terms">
+          Bằng cách đăng nhập, bạn đồng ý với
+          <a href="#" data-action="open-terms">Điều khoản dịch vụ</a> và
+          <a href="#" data-action="open-privacy">Chính sách bảo mật</a>
+          của TuongTanDigital.
+        </p>
+      </div>
+
+      <div class="splash-footer">
+        <span>© <span id="splashYear"></span> TuongTanDigital. All rights reserved.</span>
+      </div>
+    </div>
+
+    <!-- Decorative background -->
+    <div class="splash-bg-orb splash-bg-orb--1" aria-hidden="true"></div>
+    <div class="splash-bg-orb splash-bg-orb--2" aria-hidden="true"></div>
+    <div class="splash-bg-orb splash-bg-orb--3" aria-hidden="true"></div>
+  </div>
+
+  <!-- ===================== MAIN APP (hidden until auth) ===================== -->
+  <div class="app-wrapper" id="appWrapper" style="display:none">
+
+    <!-- ===== HEADER ===== -->
+    <header class="header" id="appHeader" role="banner">
+      <div class="header-inner">
+
+        <!-- Logo -->
+        <a class="logo-wrap" href="#" data-action="goto-tab" data-tab="notebook" aria-label="TuongTanDigital AI Suite — Trang chủ">
+          <div class="logo-badge" aria-hidden="true">T</div>
+          <div class="logo-text">
+            <h1>TuongTanDigital</h1>
+            <p>AI Suite · Gemini 2.5</p>
+          </div>
+        </a>
+
+        <!-- Desktop Navigation Tabs -->
+        <nav class="nav-tabs" id="navTabs" role="tablist" aria-label="Điều hướng chính">
+          <button class="nav-tab active" role="tab" aria-selected="true" aria-controls="tabNotebook"
+                  data-tab="notebook" id="navTabNotebook">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true">
+              <path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"/><path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"/>
+            </svg>
+            <span>Notebook AI</span>
+          </button>
+
+          <button class="nav-tab" role="tab" aria-selected="false" aria-controls="tabStt"
+                  data-tab="stt" id="navTabStt">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true">
+              <path d="M12 1a3 3 0 0 0-3 3v8a3 3 0 0 0 6 0V4a3 3 0 0 0-3-3z"/><path d="M19 10v2a7 7 0 0 1-14 0v-2"/><line x1="12" y1="19" x2="12" y2="23"/><line x1="8" y1="23" x2="16" y2="23"/>
+            </svg>
+            <span>STT</span>
+          </button>
+
+          <button class="nav-tab" role="tab" aria-selected="false" aria-controls="tabTts"
+                  data-tab="tts" id="navTabTts">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true">
+              <polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"/><path d="M15.54 8.46a5 5 0 0 1 0 7.07"/><path d="M19.07 4.93a10 10 0 0 1 0 14.14"/>
+            </svg>
+            <span>Đọc TTS</span>
+          </button>
+
+          <button class="nav-tab" role="tab" aria-selected="false" aria-controls="tabRec"
+                  data-tab="rec" id="navTabRec">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true">
+              <circle cx="12" cy="12" r="10"/><circle cx="12" cy="12" r="3"/>
+            </svg>
+            <span>Ghi hình</span>
+          </button>
+
+          <button class="nav-tab" role="tab" aria-selected="false" aria-controls="tabCvt"
+                  data-tab="cvt" id="navTabCvt">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true">
+              <polyline points="17 1 21 5 17 9"/><path d="M3 11V9a4 4 0 0 1 4-4h14"/><polyline points="7 23 3 19 7 15"/><path d="M21 13v2a4 4 0 0 1-4 4H3"/>
+            </svg>
+            <span>Convert</span>
+          </button>
+
+          <button class="nav-tab" role="tab" aria-selected="false" aria-controls="tabSettings"
+                  data-tab="settings" id="navTabSettings">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true">
+              <circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1-2.83 2.83l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-4 0v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83-2.83l.06-.06A1.65 1.65 0 0 0 4.68 15a1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1 0-4h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 2.83-2.83l.06.06A1.65 1.65 0 0 0 9 4.68a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 4 0v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 2.83l-.06.06A1.65 1.65 0 0 0 19.4 9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 0 4h-.09a1.65 1.65 0 0 0-1.51 1z"/>
+            </svg>
+            <span>Cài đặt</span>
+          </button>
+        </nav>
+
+        <!-- Header Actions -->
+        <div class="header-actions">
+          <!-- Session Save Indicator -->
+          <span class="session-indicator" id="sessionSaveIndicator" aria-live="polite" style="display:none">
+            ✓ Đã lưu
+          </span>
+
+          <!-- PRO Badge (shown when licensed) -->
+          <span class="pro-badge" id="proBadge" style="display:none" title="Gói Pro đang hoạt động">PRO</span>
+
+          <!-- User Avatar (shown after login) -->
+          <div class="user-menu" id="userMenu" style="display:none">
+            <img class="user-avatar" id="userAvatar" src="" alt="Avatar" width="32" height="32">
+            <span class="user-name" id="userName"></span>
+            <div class="user-dropdown" id="userDropdown">
+              <div class="user-dropdown-header" id="userDropdownHeader">
+                <img class="user-dropdown-avatar" id="userDropdownAvatar" src="" alt="">
+                <div>
+                  <div class="user-dropdown-name" id="userDropdownName"></div>
+                  <div class="user-dropdown-email" id="userDropdownEmail"></div>
+                </div>
+              </div>
+              <div class="user-dropdown-divider"></div>
+              <button class="user-dropdown-item" data-action="open-account">
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
+                Tài khoản & Gói
+              </button>
+              <button class="user-dropdown-item" data-action="open-onboard">
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><path d="M9.09 9a3 3 0 0 1 5.83 1c0 2-3 3-3 3"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg>
+                Hướng dẫn sử dụng
+              </button>
+              <button class="user-dropdown-item" data-action="open-history">
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="12 8 12 12 14 14"/><path d="M3.05 11a9 9 0 1 0 .5-4"/><polyline points="3 3 3 9 9 9"/></svg>
+                Lịch sử
+              </button>
+              <div class="user-dropdown-divider"></div>
+              <button class="user-dropdown-item user-dropdown-item--danger" data-action="sign-out">
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/><polyline points="16 17 21 12 16 7"/><line x1="21" y1="12" x2="9" y2="12"/></svg>
+                Đăng xuất
+              </button>
+            </div>
+          </div>
+
+          <!-- API Key Button -->
+          <button class="btn-apikey" id="btnApiKey" data-action="open-apikeys" type="button">
+            <span class="api-dot" id="apiDot"></span>
+            <span id="apiKeyLabel">API KEYS</span>
+          </button>
+
+          <!-- Command Palette -->
+          <button class="btn-icon" id="btnCommandPalette" data-action="open-command-palette"
+                  title="Bảng lệnh (Ctrl+P)" aria-label="Mở bảng lệnh nhanh" type="button">
+            <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
+          </button>
+
+          <!-- Dark Mode Toggle -->
+          <button class="btn-icon" id="btnDarkToggle" data-action="toggle-dark"
+                  title="Chế độ tối/sáng (Ctrl+D)" aria-label="Chuyển chế độ tối/sáng" type="button">
+            🌙
+          </button>
+
+          <!-- Help -->
+          <button class="btn-icon" id="btnHelp" data-action="open-onboard"
+                  title="Hướng dẫn (?)" aria-label="Mở hướng dẫn sử dụng" type="button">
+            <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><path d="M9.09 9a3 3 0 0 1 5.83 1c0 2-3 3-3 3"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg>
+          </button>
+        </div>
+
+      </div>
+    </header>
+
+    <!-- ===== HERO SECTION ===== -->
+    <section class="hero" id="heroSection" aria-label="Thông tin tab hiện tại">
+      <div class="hero-inner">
+        <div class="hero-badge" id="heroBadge">✨ TuongTanDigital AI Suite</div>
+        <h2 class="hero-title" id="heroTitle">Notebook AI — Phân tích tài liệu thông minh</h2>
+        <p class="hero-desc" id="heroDesc">Upload tài liệu, đặt câu hỏi, nhận câu trả lời có trích dẫn nguồn. Hoàn toàn miễn phí.</p>
+        <div class="hero-shortcuts" id="heroShortcuts" aria-label="Phím tắt">
+          <span class="kbd-hint"><kbd>Ctrl</kbd>+<kbd>K</kbd> Focus chat</span>
+          <span class="kbd-hint"><kbd>Ctrl</kbd>+<kbd>P</kbd> Bảng lệnh</span>
+          <span class="kbd-hint"><kbd>Ctrl</kbd>+<kbd>D</kbd> Dark mode</span>
+          <span class="kbd-hint"><kbd>?</kbd> Phím tắt</span>
+        </div>
+      </div>
+      <div class="hero-orb" aria-hidden="true"></div>
+    </section>
+
+    <!-- ===== MAIN CONTENT ===== -->
+    <main class="main-content" id="mainContent" role="main">
+
+      <!-- ==================== TAB: NOTEBOOK AI ==================== -->
+      <div class="tab-panel" id="tabNotebook" role="tabpanel" aria-labelledby="navTabNotebook">
+        <div class="notebook-layout" id="notebookLayout">
+
+          <!-- Sidebar: Notebook Manager (collapsible) -->
+          <aside class="notebook-sidebar" id="notebookSidebar" aria-label="Quản lý Notebook">
+            <div class="sidebar-header">
+              <span class="sidebar-title">📚 Notebooks</span>
+              <div class="sidebar-header-actions">
+                <button class="btn-icon-sm" id="btnNewNotebook" data-action="new-notebook"
+                        title="Tạo notebook mới (Ctrl+N)" aria-label="Tạo notebook mới" type="button">
+                  <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
+                </button>
+                <button class="btn-icon-sm" id="btnToggleSidebar" data-action="toggle-sidebar"
+                        title="Thu gọn sidebar" aria-label="Thu gọn sidebar" type="button">
+                  <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="15 18 9 12 15 6"/></svg>
+                </button>
+              </div>
+            </div>
+            <div class="notebook-list" id="notebookList" role="list" aria-label="Danh sách notebook"></div>
+            <div class="sidebar-footer">
+              <span class="sidebar-footer-text" id="notebookCount">0 notebooks</span>
+            </div>
+          </aside>
+
+          <!-- Sidebar Toggle (when collapsed) -->
+          <button class="sidebar-expand-btn" id="btnExpandSidebar" data-action="expand-sidebar"
+                  title="Mở sidebar notebooks" aria-label="Mở sidebar notebooks"
+                  style="display:none" type="button">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="9 18 15 12 9 6"/></svg>
+          </button>
+
+          <!-- Main Notebook Area -->
+          <div class="notebook-main" id="notebookMain">
+
+            <!-- Sources Panel + Chat in split layout -->
+            <div class="notebook-split" id="notebookSplit">
+
+              <!-- Sources Column -->
+              <div class="sources-column" id="sourcesColumn">
+                <div class="card">
+                  <div class="card-title">
+                    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/></svg>
+                    NGUỒN TÀI LIỆU
+                    <span class="source-count-badge" id="srcCount">0</span>
+                    <button class="help-icon" data-help="sources" title="Hướng dẫn thêm nguồn" type="button">?</button>
+                  </div>
+
+                  <!-- Add Source Buttons -->
+                  <div class="add-source-grid" id="addSourceGrid">
+                    <button class="add-src-btn" data-action="add-source-pdf" type="button">
+                      <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/></svg>
+                      PDF / DOCX
+                    </button>
+                    <button class="add-src-btn" data-action="add-source-image" type="button">
+                      <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="18" height="18" rx="2" ry="2"/><circle cx="8.5" cy="8.5" r="1.5"/><polyline points="21 15 16 10 5 21"/></svg>
+                      Hình ảnh
+                    </button>
+                    <button class="add-src-btn" data-action="add-source-audio" type="button">
+                      <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 1a3 3 0 0 0-3 3v8a3 3 0 0 0 6 0V4a3 3 0 0 0-3-3z"/><path d="M19 10v2a7 7 0 0 1-14 0v-2"/></svg>
+                      Audio
+                    </button>
+                    <button class="add-src-btn" data-action="add-source-url" type="button">
+                      <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><line x1="2" y1="12" x2="22" y2="12"/><path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"/></svg>
+                      URL / YouTube
+                    </button>
+                    <button class="add-src-btn add-src-btn--text" data-action="add-source-text" type="button">
+                      <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="17" y1="10" x2="3" y2="10"/><line x1="21" y1="6" x2="3" y2="6"/><line x1="21" y1="14" x2="3" y2="14"/><line x1="13" y1="18" x2="3" y2="18"/></svg>
+                      📝 Nhập văn bản
+                    </button>
+                    <button class="add-src-btn" data-action="add-source-search" type="button">
+                      <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
+                      Tìm trong nguồn
+                    </button>
+                  </div>
+
+                  <!-- Hidden file inputs -->
+                  <input type="file" id="srcFilePdf" accept=".pdf,.docx,.doc" multiple style="display:none">
+                  <input type="file" id="srcFileImage" accept=".jpg,.jpeg,.png,.webp,.gif,.bmp" multiple style="display:none">
+                  <input type="file" id="srcFileAudio" accept=".mp3,.wav,.m4a,.ogg,.aac,.webm" multiple style="display:none">
+
+                  <!-- Sources List -->
+                  <div class="sources-panel" id="sourcesPanel" role="list" aria-label="Danh sách nguồn tài liệu"></div>
+
+                  <!-- Source Search Bar (hidden by default) -->
+                  <div class="source-search-bar" id="sourceSearchBar" style="display:none">
+                    <input type="search" class="input input--sm" id="sourceSearchInput"
+                           placeholder="🔍 Tìm trong tất cả nguồn..." aria-label="Tìm kiếm trong nguồn">
+                    <div class="source-search-results" id="sourceSearchResults"></div>
+                  </div>
+
+                  <!-- Notebook Actions -->
+                  <div class="notebook-actions-row">
+                    <button class="btn btn-secondary btn-sm" data-action="open-compare" type="button">
+                      <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="18" y1="20" x2="18" y2="10"/><line x1="12" y1="20" x2="12" y2="4"/><line x1="6" y1="20" x2="6" y2="14"/></svg>
+                      So sánh
+                    </button>
+                    <button class="btn btn-secondary btn-sm" data-action="open-export" type="button">
+                      <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
+                      Xuất
+                    </button>
+                    <button class="btn btn-secondary btn-sm" data-action="clear-sources" type="button">
+                      <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="3 6 5 6 21 6"/><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a1 1 0 0 1 1-1h4a1 1 0 0 1 1 1v2"/></svg>
+                      Xóa tất cả
+                    </button>
+                  </div>
+
+                </div><!-- /card sources -->
+              </div><!-- /sources-column -->
+
+              <!-- Split Divider (draggable) -->
+              <div class="split-divider" id="splitDivider" role="separator" aria-label="Kéo để thay đổi kích thước" tabindex="0"></div>
+
+              <!-- Chat Column -->
+              <div class="chat-column" id="chatColumn">
+                <div class="card chat-card">
+
+                  <!-- Chat Toolbar -->
+                  <div class="chat-toolbar" role="toolbar" aria-label="Công cụ chat">
+                    <div class="chat-toolbar-left">
+                      <span class="card-title" style="margin:0">
+                        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>
+                        CHAT VỚI TÀI LIỆU
+                        <span class="badge" id="nbStatus" style="display:none"></span>
+                      </span>
+                    </div>
+                    <div class="chat-toolbar-right">
+                      <!-- Persona Selector -->
+                      <select class="select select--xs" id="personaSelect" title="Phong cách AI" aria-label="Chọn phong cách AI">
+                        <option value="notebook">📚 Notebook AI</option>
+                        <option value="professor">🎓 Giáo sư</option>
+                        <option value="friend">👤 Bạn bè</option>
+                        <option value="consultant">💼 Chuyên gia</option>
+                        <option value="journalist">📰 Phóng viên</option>
+                        <option value="tutor">👩‍🏫 Gia sư</option>
+                      </select>
+                      <!-- Model Select -->
+                      <select class="select select--xs" id="modelSelect" title="Chọn model Gemini" aria-label="Chọn model Gemini">
+                        <option value="gemini-2.5-flash">Gemini 2.5 Flash ⚡</option>
+                        <option value="gemini-2.5-pro">Gemini 2.5 Pro 🧠</option>
+                        <option value="gemini-2.0-flash">Gemini 2.0 Flash</option>
+                        <option value="gemini-1.5-pro">Gemini 1.5 Pro</option>
+                      </select>
+                      <!-- Toolbar Buttons -->
+                      <button class="btn-icon-sm" data-action="toggle-split-view" title="Split View (Ctrl+\)" type="button">
+                        <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="18" height="18" rx="2"/><line x1="12" y1="3" x2="12" y2="21"/></svg>
+                      </button>
+                      <button class="btn-icon-sm" data-action="toggle-focus-mode" title="Focus Mode" type="button">
+                        <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="15 3 21 3 21 9"/><polyline points="9 21 3 21 3 15"/><line x1="21" y1="3" x2="14" y2="10"/><line x1="3" y1="21" x2="10" y2="14"/></svg>
+                      </button>
+                      <button class="btn-icon-sm" data-action="clear-chat" title="Xóa lịch sử chat" type="button">
+                        <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="3 6 5 6 21 6"/><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6"/></svg>
+                      </button>
+                    </div>
+                  </div>
+
+                  <!-- Suggested Questions Row -->
+                  <div class="suggested-row" id="suggestedRow" aria-label="Câu hỏi gợi ý" style="display:none"></div>
+
+                  <!-- Quick Actions Row -->
+                  <div class="quick-actions-row" role="toolbar" aria-label="Hành động nhanh">
+                    <button class="quick-btn" data-action="quick-summary" type="button">📝 Tóm tắt</button>
+                    <button class="quick-btn" data-action="quick-keypoints" type="button">🎯 Điểm chính</button>
+                    <button class="quick-btn" data-action="quick-questions" type="button">❓ Câu hỏi</button>
+                    <button class="quick-btn" data-action="quick-mindmap" type="button">🗺️ Mind Map</button>
+                    <button class="quick-btn" data-action="quick-flashcard" type="button">🃏 Flashcard</button>
+                    <button class="quick-btn" data-action="quick-quiz" type="button">📝 Quiz</button>
+                    <button class="quick-btn" data-action="quick-glossary" type="button">📖 Thuật ngữ</button>
+                    <button class="quick-btn" data-action="quick-todo" type="button">✅ TODO</button>
+                    <button class="quick-btn" data-action="quick-podcast" type="button">🎙️ Podcast AI</button>
+                    <button class="quick-btn" data-action="quick-sentiment" type="button">📊 Cảm xúc</button>
+                    <button class="quick-btn" data-action="quick-timeline" type="button">📅 Timeline</button>
+                    <button class="quick-btn" data-action="quick-citation" type="button">📌 Trích dẫn</button>
+                  </div>
+
+                  <!-- Chat Messages -->
+                  <div class="chat-messages" id="chatMessages" role="log" aria-live="polite" aria-label="Lịch sử hội thoại"></div>
+
+                  <!-- Token Estimate -->
+                  <div class="token-estimate" id="tokenEstimate" style="display:none" aria-live="polite"></div>
+
+                  <!-- Chat Input -->
+                  <div class="chat-input-row">
+                    <textarea class="chat-input" id="chatInput"
+                              placeholder="Đặt câu hỏi về tài liệu... (Ctrl+Enter để gửi)"
+                              rows="1"
+                              aria-label="Nhập câu hỏi"
+                              maxlength="8000"></textarea>
+                    <div class="chat-input-actions">
+                      <!-- Template Prompts -->
+                      <button class="btn-icon-sm" data-action="open-prompt-library"
+                              title="Thư viện prompt (Alt+T)" aria-label="Thư viện prompt mẫu" type="button">
+                        <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"/><path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"/></svg>
+                      </button>
+                      <!-- Cancel -->
+                      <button class="btn-cancel" id="cancelChatBtn" data-action="cancel-chat"
+                              style="display:none" type="button">✕ Hủy</button>
+                      <!-- Send -->
+                      <button class="chat-send" id="chatSendBtn" data-action="send-chat"
+                              title="Gửi (Ctrl+Enter)" aria-label="Gửi câu hỏi" type="button">
+                        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="22" y1="2" x2="11" y2="13"/><polygon points="22 2 15 22 11 13 2 9 22 2"/></svg>
+                      </button>
+                    </div>
+                  </div>
+
+                </div><!-- /chat-card -->
+              </div><!-- /chat-column -->
+
+            </div><!-- /notebook-split -->
+          </div><!-- /notebook-main -->
+        </div><!-- /notebook-layout -->
+      </div><!-- /tabNotebook -->
+
+      <!-- ==================== TAB: STT ==================== -->
+      <div class="tab-panel" id="tabStt" role="tabpanel" aria-labelledby="navTabStt" style="display:none">
+        <div class="grid-2">
+
+          <!-- Upload & Record -->
+          <div class="card">
+            <div class="card-title">
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="17 8 12 3 7 8"/><line x1="12" y1="3" x2="12" y2="15"/></svg>
+              TẢI LÊN FILE AUDIO
+              <button class="help-icon" data-help="stt-upload" type="button">?</button>
+            </div>
+
+            <div class="dropzone" id="sttDropzone" role="button" tabindex="0"
+                 aria-label="Kéo thả hoặc click để chọn file audio">
+              <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" aria-hidden="true" style="color:var(--primary);margin-bottom:8px"><path d="M12 1a3 3 0 0 0-3 3v8a3 3 0 0 0 6 0V4a3 3 0 0 0-3-3z"/><path d="M19 10v2a7 7 0 0 1-14 0v-2"/><line x1="12" y1="19" x2="12" y2="23"/><line x1="8" y1="23" x2="16" y2="23"/></svg>
+              <p>🎵 Kéo thả hoặc click chọn file audio</p>
+              <small>MP3, WAV, M4A, OGG, AAC, WEBM — Tối đa 20MB</small>
+              <input type="file" id="sttFileInput" accept=".mp3,.wav,.m4a,.ogg,.aac,.webm,.mp4" style="display:none">
+            </div>
+            <div class="file-chip" id="sttFileChip" style="display:none">
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 1a3 3 0 0 0-3 3v8a3 3 0 0 0 6 0V4a3 3 0 0 0-3-3z"/></svg>
+              <span id="sttFileName">...</span>
+            </div>
+
+            <div class="divider"></div>
+
+            <!-- Record Microphone -->
+            <div class="card-title">
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><circle cx="12" cy="12" r="10"/><circle cx="12" cy="12" r="3"/></svg>
+              HOẶC GHI ÂM TRỰC TIẾP
+            </div>
+            <div class="rec-wrap">
+              <button class="rec-btn-circle" id="sttRecBtn" data-action="toggle-stt-rec"
+                      aria-label="Bắt đầu/dừng ghi âm" type="button">
+                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M12 1a3 3 0 0 0-3 3v8a3 3 0 0 0 6 0V4a3 3 0 0 0-3-3z"/><path d="M19 10v2a7 7 0 0 1-14 0v-2"/></svg>
+              </button>
+              <div class="rec-label" id="sttRecLabel">NHẤN ĐỂ GHI ÂM</div>
+              <div class="timer" id="sttTimer" aria-live="polite">00:00</div>
+            </div>
+
+            <!-- Real-time STT -->
+            <div class="divider"></div>
+            <div class="card-title">
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><polygon points="23 7 16 12 23 17 23 7"/><rect x="1" y="5" width="15" height="14" rx="2" ry="2"/></svg>
+              REAL-TIME STT (Chrome/Edge)
+              <button class="help-icon" data-help="live-stt" type="button">?</button>
+            </div>
+            <button class="btn btn-secondary btn-sm" id="btnLiveStt" data-action="toggle-live-stt" type="button">
+              🎤 Bắt đầu Real-time
+            </button>
+            <div class="live-stt-box" id="liveSttInterim" aria-live="polite" style="display:none"></div>
+
+            <!-- STT Language -->
+            <div class="divider"></div>
+            <label class="lbl" for="sttLang">NGÔN NGỮ PHIÊN ÂM</label>
+            <select class="select" id="sttLang">
+              <option value="auto">🌐 Tự động nhận diện</option>
+              <option value="vi-VN" selected>🇻🇳 Tiếng Việt</option>
+              <option value="en-US">🇺🇸 Tiếng Anh (US)</option>
+              <option value="en-GB">🇬🇧 Tiếng Anh (UK)</option>
+              <option value="ja-JP">🇯🇵 Tiếng Nhật</option>
+              <option value="zh-CN">🇨🇳 Tiếng Trung</option>
+              <option value="ko-KR">🇰🇷 Tiếng Hàn</option>
+              <option value="fr-FR">🇫🇷 Tiếng Pháp</option>
+            </select>
+
+            <div class="prog-wrap" id="sttProg" style="display:none">
+              <div class="prog-bg"><div class="prog-fill" id="sttProgFill"></div></div>
+              <div class="prog-txt" id="sttProgTxt"></div>
+            </div>
+
+            <button class="btn btn-primary" id="sttBtn" data-action="process-stt" style="margin-top:12px" type="button">
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="5 3 19 12 5 21 5 3"/></svg>
+              BẮT ĐẦU PHIÊN ÂM AI
+            </button>
+          </div>
+
+          <!-- STT Results -->
+          <div class="card">
+            <div class="card-title" style="justify-content:space-between">
+              <span>
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><line x1="17" y1="10" x2="3" y2="10"/><line x1="21" y1="6" x2="3" y2="6"/><line x1="21" y1="14" x2="3" y2="14"/><line x1="13" y1="18" x2="3" y2="18"/></svg>
+                KẾT QUẢ PHIÊN ÂM
+              </span>
+              <span class="badge" id="sttBadge" style="display:none" aria-live="polite"></span>
+            </div>
+
+            <textarea class="textarea result-placeholder" id="sttResult"
+                      placeholder="Kết quả phiên âm sẽ xuất hiện tại đây..."
+                      rows="14" readonly aria-label="Kết quả phiên âm" style="min-height:280px"></textarea>
+            <div class="word-count-row">
+              <span id="sttWordCount" style="font-size:11px;color:var(--text3)" aria-live="polite"></span>
+            </div>
+
+            <div class="action-row" id="sttActions" style="display:none">
+              <button class="btn btn-secondary btn-sm" data-action="copy-stt" type="button">📋 Sao chép</button>
+              <button class="btn btn-secondary btn-sm" data-action="download-stt-txt" type="button">⬇️ TXT</button>
+              <button class="btn btn-secondary btn-sm" data-action="download-stt-docx" type="button">📄 DOCX</button>
+              <button class="btn btn-success btn-sm" data-action="add-stt-to-notebook" type="button">➕ Thêm vào Notebook</button>
+              <button class="btn btn-secondary btn-sm" data-action="clear-stt" type="button">🗑️ Xóa</button>
+            </div>
+
+            <!-- STT History -->
+            <div class="divider"></div>
+            <div class="card-title">
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><polyline points="12 8 12 12 14 14"/><path d="M3.05 11a9 9 0 1 0 .5-4"/><polyline points="3 3 3 9 9 9"/></svg>
+              LỊCH SỬ PHIÊN ÂM
+            </div>
+            <div class="hist-list" id="sttHist" role="list" aria-label="Lịch sử phiên âm">
+              <div class="empty-st">Chưa có lịch sử phiên âm</div>
+            </div>
+          </div>
+
+        </div>
+      </div><!-- /tabStt -->
+
+      <!-- ==================== TAB: TTS ==================== -->
+      <div class="tab-panel" id="tabTts" role="tabpanel" aria-labelledby="navTabTts" style="display:none">
+        <div class="tts-layout">
+
+          <!-- Left: Text Input + Reading Display -->
+          <div class="tts-left">
+            <div class="card">
+              <div class="card-title">
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><line x1="17" y1="10" x2="3" y2="10"/><line x1="21" y1="6" x2="3" y2="6"/></svg>
+                VĂN BẢN CẦN ĐỌC
+                <button class="help-icon" data-help="tts-input" type="button">?</button>
+              </div>
+
+              <textarea class="textarea" id="ttsInput"
+                        placeholder="Nhập hoặc dán văn bản cần đọc tại đây..."
+                        rows="8" aria-label="Văn bản cần đọc"
+                        maxlength="5000"></textarea>
+
+              <div class="tts-input-meta">
+                <span id="ttsCharCount" style="font-size:11px;color:var(--text3)" aria-live="polite">0 / 5000 ký tự</span>
+                <div class="tts-input-actions">
+                  <button class="btn btn-secondary btn-sm" data-action="tts-load-sample" type="button">📄 Mẫu</button>
+                  <label class="btn btn-secondary btn-sm" tabindex="0">
+                    📁 File
+                    <input type="file" accept=".txt,.md" id="ttsFileInput" style="display:none">
+                  </label>
+                  <button class="btn btn-secondary btn-sm" data-action="tts-ai-enhance" type="button">✨ AI Cải thiện</button>
+                  <button class="btn btn-secondary btn-sm" data-action="tts-auto-lang" type="button">🌐 Auto Lang</button>
+                </div>
+              </div>
+
+              <!-- Reading Display Panel -->
+              <div class="tts-reading-display" id="ttsReadingDisplay">
+                <div class="tts-reading-header">
+                  <span>📖 VĂN BẢN ĐANG ĐỌC</span>
+                  <div class="tts-progress-mini">
+                    <div class="tts-progress-bar" id="ttsProgressBar" style="width:0%"></div>
+                  </div>
+                  <span id="ttsProgressText" style="font-size:10px;color:var(--text3)">0%</span>
+                </div>
+                <div class="tts-reading-content" id="ttsReadingContent" aria-live="polite">
+                  <span style="color:var(--text3);font-style:italic">Văn bản sẽ được highlight khi đọc...</span>
+                </div>
+              </div>
+
+            </div>
+          </div>
+
+          <!-- Right: Engine Selector + Controls -->
+          <div class="tts-right">
+            <div class="card">
+              <div class="card-title">
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"/><path d="M15.54 8.46a5 5 0 0 1 0 7.07"/></svg>
+                CHỌN ENGINE ĐỌC
+              </div>
+
+              <!-- Engine Toggle -->
+              <div class="tts-engine-toggle" role="group" aria-label="Chọn engine TTS">
+                <button class="tts-engine-btn active" id="engineBtnBrowser" data-engine="browser" type="button">
+                  <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><line x1="2" y1="12" x2="22" y2="12"/></svg>
+                  🌐 Giọng Trình duyệt
+                  <span class="engine-badge">MIỄN PHÍ · OFFLINE</span>
+                </button>
+                <button class="tts-engine-btn" id="engineBtnGemini" data-engine="gemini" type="button">
+                  <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 2a10 10 0 1 0 10 10"/><path d="M12 8v4l3 3"/></svg>
+                  ✨ Giọng Gemini AI
+                  <span class="engine-badge engine-badge--pro">30 GIỌNG · HD</span>
+                </button>
+              </div>
+
+              <!-- Browser TTS Panel -->
+              <div class="tts-engine-panel" id="panelBrowserTts">
+                <label class="lbl" for="voiceSel">GIỌNG ĐỌC TRÌNH DUYỆT</label>
+                <select class="select" id="voiceSel" style="margin-bottom:12px" aria-label="Chọn giọng đọc"></select>
+
+                <div class="tts-controls-grid">
+                  <div class="slider-row">
+                    <label>Tốc độ <span id="rateVal">1.0</span>x</label>
+                    <input type="range" id="ttsRate" min="0.5" max="2" step="0.1" value="1"
+                           aria-label="Tốc độ đọc">
+                  </div>
+                  <div class="slider-row">
+                    <label>Cao độ <span id="pitchVal">1.0</span></label>
+                    <input type="range" id="ttsPitch" min="0" max="2" step="0.1" value="1"
+                           aria-label="Cao độ giọng đọc">
+                  </div>
+                  <div class="slider-row">
+                    <label>Âm lượng <span id="volVal">1.0</span></label>
+                    <input type="range" id="ttsVol" min="0" max="1" step="0.05" value="1"
+                           aria-label="Âm lượng">
+                  </div>
+                </div>
+
+                <div class="tts-player-btns">
+                  <button class="player-btn pbtn-play" data-action="tts-play" type="button">▶ Đọc</button>
+                  <button class="player-btn pbtn-pause" data-action="tts-pause" type="button">⏸ Tạm dừng</button>
+                  <button class="player-btn pbtn-stop" data-action="tts-stop" type="button">⏹ Dừng</button>
+                </div>
+                <div id="ttsStatsRow" style="display:none;margin-top:6px;font-size:11px;color:var(--text3)">
+                  <span id="ttsStats"></span>
+                </div>
+              </div>
+
+              <!-- Gemini TTS Panel -->
+              <div class="tts-engine-panel" id="panelGeminiTts" style="display:none">
+                <!-- Mini Tabs for Gemini TTS settings -->
+                <div class="mini-tabs" id="geminiTtsTabs" role="tablist">
+                  <button class="mini-tab active" role="tab" data-mini-tab="geminiVoices" type="button">🎤 Chọn giọng</button>
+                  <button class="mini-tab" role="tab" data-mini-tab="geminiStyle" type="button">🎨 Style</button>
+                  <button class="mini-tab" role="tab" data-mini-tab="geminiModel" type="button">⚙️ Model</button>
+                </div>
+
+                <div class="mini-panel active" id="mpGeminiVoices">
+                  <div class="tts-voice-grid" id="geminiVoiceGrid" role="list" aria-label="Danh sách giọng Gemini"></div>
+                </div>
+                <div class="mini-panel" id="mpGeminiStyle" style="display:none">
+                  <label class="lbl" for="ttsStylePrompt">PROMPT PHONG CÁCH (tùy chọn)</label>
+                  <textarea class="textarea" id="ttsStylePrompt" rows="5"
+                            placeholder="VD: Đọc với giọng trầm ấm, chậm rãi như kể chuyện...&#10;Style: Professional news anchor&#10;Pacing: Slow and clear"
+                            aria-label="Prompt phong cách đọc"></textarea>
+                </div>
+                <div class="mini-panel" id="mpGeminiModel" style="display:none">
+                  <label class="lbl" for="ttsMdlSel">MODEL GEMINI TTS</label>
+                  <select class="select" id="ttsMdlSel" aria-label="Chọn model Gemini TTS">
+                    <option value="gemini-2.5-flash-preview-tts">⚡ Gemini 2.5 Flash TTS (Khuyên dùng)</option>
+                    <option value="gemini-2.5-pro-preview-tts">🧠 Gemini 2.5 Pro TTS (Chất lượng cao nhất)</option>
+                  </select>
+                  <p style="margin-top:8px;font-size:11px;color:var(--text3)">Flash TTS nhanh hơn, Pro TTS tự nhiên hơn cho văn bản dài.</p>
+                </div>
+
+                <div class="prog-wrap" id="geminiTtsProg" style="display:none">
+                  <div class="prog-bg"><div class="prog-fill" id="geminiTtsProgFill"></div></div>
+                  <div class="prog-txt" id="geminiTtsProgTxt"></div>
+                </div>
+
+                <button class="btn btn-primary" id="geminiTtsBtn" data-action="generate-gemini-tts"
+                        style="margin-top:12px" type="button">
+                  🎙️ TẠO GIỌNG ĐỌC AI & TẢI VỀ
+                </button>
+
+                <div id="geminiAudioPlayer" style="display:none;margin-top:12px">
+                  <audio id="geminiAudio" controls style="width:100%" aria-label="Audio Gemini TTS"></audio>
+                  <button class="btn btn-success btn-sm" id="geminiDlBtn" data-action="download-gemini-tts"
+                          style="margin-top:8px;width:100%" type="button">
+                    ⬇️ Tải file WAV
+                  </button>
+                </div>
+              </div>
+
+            </div>
+          </div>
+
+        </div>
+      </div><!-- /tabTts -->
+
+      <!-- ==================== TAB: RECORD ==================== -->
+      <div class="tab-panel" id="tabRec" role="tabpanel" aria-labelledby="navTabRec" style="display:none">
+        <div class="grid-2">
+
+          <!-- Screen Recorder -->
+          <div class="card">
+            <div class="card-title">
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><circle cx="12" cy="12" r="10"/><circle cx="12" cy="12" r="3"/></svg>
+              GHI HÌNH / GHI ÂM MÀN HÌNH
+              <button class="help-icon" data-help="screen-record" type="button">?</button>
+            </div>
+
+            <div class="video-wrap" id="videoWrap">
+              <div class="video-placeholder" id="videoPlaceholder">
+                <svg width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" aria-hidden="true"><circle cx="12" cy="12" r="10"/><circle cx="12" cy="12" r="3"/></svg>
+                <span>Nhấn "Bắt đầu" để ghi màn hình</span>
+              </div>
+              <video id="screenLive" autoplay muted style="display:none;width:100%;height:100%;object-fit:contain" aria-label="Màn hình đang ghi"></video>
+              <video id="screenPlayback" controls style="display:none;width:100%;height:100%;object-fit:contain" aria-label="Video đã ghi"></video>
+              <div class="rec-badge" id="recBadge" style="display:none" aria-live="polite">🔴 REC</div>
+            </div>
+
+            <div class="screen-timer" id="screenTimer" aria-live="polite">00:00</div>
+
+            <div class="audio-capture-opts" role="group" aria-label="Tùy chọn âm thanh">
+              <label class="audio-opt">
+                <input type="checkbox" id="captureSysAudio" checked>
+                🔊 Âm thanh hệ thống
+              </label>
+              <label class="audio-opt">
+                <input type="checkbox" id="captureMic">
+                🎤 Microphone
+              </label>
+            </div>
+
+            <div class="rec-controls">
+              <button class="rbtn rbtn-start" id="btnRecStart" data-action="start-record" type="button">
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><circle cx="12" cy="12" r="10"/><circle cx="12" cy="12" r="3"/></svg>
+                Bắt đầu ghi
+              </button>
+              <button class="rbtn rbtn-stop" id="btnRecStop" data-action="stop-record" disabled type="button">
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><rect x="3" y="3" width="18" height="18" rx="2"/></svg>
+                Dừng lại
+              </button>
+              <button class="rbtn rbtn-dl" id="btnRecDownload" data-action="download-record" disabled type="button">
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
+                Tải video
+              </button>
+            </div>
+          </div>
+
+          <!-- Meeting Minutes -->
+          <div class="card">
+            <div class="card-title" style="justify-content:space-between">
+              <span>
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/><polyline points="10 9 9 9 8 9"/></svg>
+                📋 BIÊN BẢN CUỘC HỌP AI
+              </span>
+              <span class="badge" id="minutesBadge" style="display:none" aria-live="polite"></span>
+            </div>
+
+            <!-- How to use guide (inline) -->
+            <div class="meeting-guide">
+              <div class="meeting-guide-steps">
+                <div class="meeting-guide-step">
+                  <span class="step-num">1</span>
+                  <span>Bắt đầu ghi hình cuộc họp ở bên trái</span>
+                </div>
+                <div class="meeting-guide-step">
+                  <span class="step-num">2</span>
+                  <span>Chọn template biên bản phù hợp</span>
+                </div>
+                <div class="meeting-guide-step">
+                  <span class="step-num">3</span>
+                  <span>Nhấn Dừng → AI tự động tạo biên bản</span>
+                </div>
+              </div>
+            </div>
+
+            <label class="lbl" for="minutesTemplate">TEMPLATE BIÊN BẢN</label>
+            <select class="select" id="minutesTemplate" style="margin-bottom:12px" aria-label="Chọn template biên bản">
+              <option value="full">📋 Đầy đủ (Tiêu đề + Tóm tắt + Quyết định + TODO)</option>
+              <option value="todo">✅ Chỉ TODO & Action Items</option>
+              <option value="summary">📝 Tóm tắt nhanh</option>
+              <option value="formal">🏛️ Chính thức (Formal Meeting Minutes)</option>
+              <option value="standup">⚡ Daily Standup</option>
+            </select>
+
+            <div class="prog-wrap" id="minutesProg" style="display:none">
+              <div class="prog-bg"><div class="prog-fill" id="minutesProgFill"></div></div>
+              <div class="prog-txt" id="minutesProgTxt"></div>
+            </div>
+
+            <div class="minutes-output" id="minutesOutput" aria-live="polite">
+              <span style="color:var(--text3);font-style:italic">Biên bản họp sẽ tự động tạo sau khi dừng ghi hình...</span>
+            </div>
+
+            <div class="action-row" style="margin-top:10px">
+              <button class="btn btn-secondary btn-sm" data-action="copy-minutes" type="button">📋 Sao chép</button>
+              <button class="btn btn-secondary btn-sm" data-action="download-minutes-txt" type="button">⬇️ TXT</button>
+              <button class="btn btn-secondary btn-sm" data-action="download-minutes-md" type="button">📝 MD</button>
+              <button class="btn btn-secondary btn-sm" data-action="download-minutes-docx" type="button">📄 DOCX</button>
+              <button class="btn btn-success btn-sm" data-action="add-minutes-to-notebook" type="button">➕ Notebook</button>
+              <button class="btn btn-primary btn-sm" data-action="regen-minutes" type="button">🔄 Tạo lại</button>
+            </div>
+          </div>
+
+        </div>
+      </div><!-- /tabRec -->
+
+      <!-- ==================== TAB: CONVERT ==================== -->
+      <div class="tab-panel" id="tabCvt" role="tabpanel" aria-labelledby="navTabCvt" style="display:none">
+        <div class="grid-2">
+
+          <!-- Input Panel -->
+          <div class="card">
+            <div class="card-title">
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><polyline points="17 1 21 5 17 9"/><path d="M3 11V9a4 4 0 0 1 4-4h14"/></svg>
+              FILE / VĂN BẢN CẦN XỬ LÝ
+              <button class="help-icon" data-help="convert" type="button">?</button>
+            </div>
+
+            <!-- Batch Mode Toggle -->
+            <div class="batch-toggle-row">
+              <label class="audio-opt">
+                <input type="checkbox" id="batchModeToggle">
+                📦 Batch Mode (nhiều file)
+              </label>
+              <span class="batch-file-count" id="batchFileCount" style="display:none"></span>
+            </div>
+
+            <!-- Single File Mode -->
+            <div id="cvtSingleMode">
+              <div class="dropzone" id="cvtDropzone" role="button" tabindex="0"
+                   aria-label="Kéo thả hoặc click chọn file">
+                <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" aria-hidden="true" style="color:var(--primary);margin-bottom:6px"><polyline points="17 1 21 5 17 9"/><path d="M3 11V9a4 4 0 0 1 4-4h14"/><polyline points="7 23 3 19 7 15"/><path d="M21 13v2a4 4 0 0 1-4 4H3"/></svg>
+                <p>🗂️ Kéo thả hoặc click chọn file</p>
+                <small>PDF, TXT, MD, DOCX, JPG, PNG, WEBP — Tối đa 20MB</small>
+                <input type="file" id="cvtFileInput" accept=".pdf,.txt,.md,.docx,.doc,.jpg,.jpeg,.png,.webp,.gif" style="display:none">
+              </div>
+              <div class="file-chip" id="cvtFileChip" style="display:none">
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/></svg>
+                <span id="cvtFileName">...</span>
+                <span id="cvtFileSizeWarn" style="color:var(--warning);font-size:10px;display:none">⚠️ File lớn có thể chậm</span>
+              </div>
+            </div>
+
+            <!-- Batch File Mode -->
+            <div id="cvtBatchMode" style="display:none">
+              <div class="dropzone" id="cvtBatchDropzone" role="button" tabindex="0"
+                   aria-label="Kéo thả nhiều file">
+                <p>📦 Kéo thả nhiều file cùng lúc</p>
+                <small>Xử lý tuần tự — Tải về tất cả kết quả dạng ZIP</small>
+                <input type="file" id="cvtBatchInput" multiple
+                       accept=".pdf,.txt,.md,.docx,.doc,.jpg,.jpeg,.png,.webp" style="display:none">
+              </div>
+              <div id="batchFileList" role="list" aria-label="Danh sách file batch" style="margin-top:8px"></div>
+            </div>
+
+            <!-- Text Input -->
+            <div class="cvt-text-toggle">
+              <button class="lbl" data-action="toggle-cvt-text" style="cursor:pointer;background:none;border:none;text-align:left" type="button">
+                ✏️ HOẶC NHẬP VĂN BẢN TRỰC TIẾP
+                <span id="cvtTextToggleIcon">▼</span>
+              </button>
+              <textarea class="textarea" id="cvtTextInput"
+                        placeholder="Dán nội dung văn bản tại đây..."
+                        rows="5" style="display:none;margin-top:6px"
+                        aria-label="Nhập văn bản trực tiếp"></textarea>
+            </div>
+
+            <!-- AI Action Chips -->
+            <div style="margin-top:14px">
+              <label class="lbl">CHỌN CHỨC NĂNG AI</label>
+              <div class="action-chips" id="cvtActionChips" role="group" aria-label="Chức năng AI">
+                <button class="action-chip active" data-action-type="extract" type="button">📋 Trích xuất</button>
+                <button class="action-chip" data-action-type="summary" type="button">📝 Tóm tắt</button>
+                <button class="action-chip" data-action-type="analyze" type="button">🔍 Phân tích sâu</button>
+                <button class="action-chip" data-action-type="translate" type="button">🌐 Dịch thuật</button>
+                <button class="action-chip" data-action-type="keypoints" type="button">🎯 Điểm chính</button>
+                <button class="action-chip" data-action-type="questions" type="button">❓ Câu hỏi</button>
+                <button class="action-chip" data-action-type="rewrite" type="button">✏️ Viết lại</button>
+                <button class="action-chip" data-action-type="table" type="button">📊 Bảng dữ liệu</button>
+              </div>
+
+              <!-- Translate Options -->
+              <div id="translateOptions" style="display:none;margin-top:8px">
+                <label class="lbl" for="translateTarget">NGÔN NGỮ ĐÍCH</label>
+                <select class="select" id="translateTarget" aria-label="Chọn ngôn ngữ dịch">
+                  <option value="tiếng Việt">🇻🇳 Tiếng Việt</option>
+                  <option value="tiếng Anh">🇺🇸 Tiếng Anh</option>
+                  <option value="tiếng Nhật">🇯🇵 Tiếng Nhật</option>
+                  <option value="tiếng Trung">🇨🇳 Tiếng Trung</option>
+                  <option value="tiếng Hàn">🇰🇷 Tiếng Hàn</option>
+                  <option value="tiếng Pháp">🇫🇷 Tiếng Pháp</option>
+                  <option value="tiếng Đức">🇩🇪 Tiếng Đức</option>
+                  <option value="tiếng Tây Ban Nha">🇪🇸 Tiếng Tây Ban Nha</option>
+                </select>
+              </div>
+            </div>
+
+            <div class="prog-wrap" id="cvtProg" style="display:none">
+              <div class="prog-bg"><div class="prog-fill" id="cvtProgFill"></div></div>
+              <div class="prog-txt" id="cvtProgTxt"></div>
+            </div>
+
+            <div style="display:flex;gap:8px;margin-top:12px">
+              <button class="btn btn-primary" id="cvtBtn" data-action="process-convert" style="flex:1" type="button">
+                🤖 XỬ LÝ VỚI AI
+              </button>
+              <button class="btn btn-danger btn-sm" id="cancelCvtBtn" data-action="cancel-convert"
+                      style="display:none" type="button">✕ Hủy</button>
+            </div>
+          </div>
+
+          <!-- Results Panel -->
+          <div class="card">
+            <div class="card-title" style="justify-content:space-between">
+              <span>
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><polyline points="22 12 18 12 15 21 9 3 6 12 2 12"/></svg>
+                KẾT QUẢ PHÂN TÍCH AI
+              </span>
+              <span class="badge" id="cvtBadge" style="display:none" aria-live="polite"></span>
+            </div>
+
+            <div id="cvtResultSearch" style="display:none;margin-bottom:8px">
+              <input type="search" class="input" id="cvtSearchInput"
+                     placeholder="🔍 Tìm trong kết quả..."
+                     aria-label="Tìm kiếm trong kết quả">
+            </div>
+
+            <div class="result-box" id="cvtResult" role="article" aria-label="Kết quả phân tích AI">
+              <span class="result-placeholder">Kết quả phân tích AI sẽ xuất hiện tại đây...</span>
+            </div>
+            <div id="cvtWordCount" style="font-size:11px;color:var(--text3);text-align:right;margin-top:4px" aria-live="polite"></div>
+
+            <div class="action-row">
+              <button class="btn btn-secondary btn-sm" data-action="copy-cvt-result" type="button">📋 Sao chép</button>
+              <button class="btn btn-secondary btn-sm" data-action="download-cvt-txt" type="button">⬇️ TXT</button>
+              <button class="btn btn-secondary btn-sm" data-action="download-cvt-docx" type="button">📄 DOCX</button>
+              <button class="btn btn-secondary btn-sm" data-action="toggle-cvt-search" type="button">🔍 Tìm kiếm</button>
+              <button class="btn btn-success btn-sm" data-action="add-cvt-to-notebook" type="button">➕ Notebook</button>
+            </div>
+
+            <!-- Batch Results Area -->
+            <div id="batchResultsArea" style="display:none;margin-top:14px">
+              <div class="card-title">📦 KẾT QUẢ BATCH</div>
+              <div id="batchResultsList" role="list" aria-label="Kết quả batch" style="display:flex;flex-direction:column;gap:6px;max-height:300px;overflow-y:auto"></div>
+              <button class="btn btn-success btn-sm" data-action="download-all-batch"
+                      style="margin-top:8px;width:100%" type="button">⬇️ Tải tất cả (ZIP)</button>
+            </div>
+          </div>
+
+        </div>
+      </div><!-- /tabCvt -->
+
+      <!-- ==================== TAB: SETTINGS ==================== -->
+      <div class="tab-panel" id="tabSettings" role="tabpanel" aria-labelledby="navTabSettings" style="display:none">
+        <div class="settings-layout">
+
+          <!-- Appearance -->
+          <div class="setting-block">
+            <h4>🎨 Bảng màu chủ đề</h4>
+            <div class="theme-buttons" role="group" aria-label="Chọn màu chủ đề">
+              <button class="theme-btn active" data-theme-color="default" style="background:linear-gradient(135deg,#4F46E5,#7C3AED)" title="Tím (mặc định)" type="button"></button>
+              <button class="theme-btn" data-theme-color="ocean" style="background:linear-gradient(135deg,#0284C7,#0EA5E9)" title="Đại dương" type="button"></button>
+              <button class="theme-btn" data-theme-color="forest" style="background:linear-gradient(135deg,#16A34A,#15803D)" title="Rừng xanh" type="button"></button>
+              <button class="theme-btn" data-theme-color="rose" style="background:linear-gradient(135deg,#E11D48,#DB2777)" title="Hồng đào" type="button"></button>
+              <button class="theme-btn" data-theme-color="amber" style="background:linear-gradient(135deg,#D97706,#F59E0B)" title="Vàng hổ phách" type="button"></button>
+            </div>
+          </div>
+
+          <div class="setting-block">
+            <h4>🌙 Chế độ sáng / tối</h4>
+            <div class="mode-buttons" role="group" aria-label="Chọn chế độ hiển thị">
+              <button class="mode-btn" id="btnModeLight" data-mode="light" type="button">☀️ Sáng</button>
+              <button class="mode-btn active" id="btnModeDark" data-mode="dark" type="button">🌙 Tối</button>
+              <button class="mode-btn" id="btnModeAuto" data-mode="auto" type="button">🔄 Tự động</button>
+            </div>
+          </div>
+
+          <div class="setting-block">
+            <h4>🖼️ Hình nền ứng dụng</h4>
+            <div class="bg-buttons" id="bgButtons" role="group" aria-label="Chọn hình nền">
+              <button class="bg-btn active" data-bg="default" style="background:linear-gradient(135deg,#FFF7ED,#FAE8FF,#DBEAFE)" type="button">Mặc định</button>
+              <button class="bg-btn" data-bg="dark-cosmos" style="background:linear-gradient(135deg,#0F172A,#1E1B4B,#0F172A)" type="button">Cosmos</button>
+              <button class="bg-btn" data-bg="nature" style="background:linear-gradient(135deg,#F0FDF4,#DCFCE7,#F7FEE7)" type="button">Thiên nhiên</button>
+              <button class="bg-btn" data-bg="sakura" style="background:linear-gradient(135deg,#FFF1F2,#FFE4E6,#FDF2F8)" type="button">Sakura</button>
+              <button class="bg-btn" data-bg="sky" style="background:linear-gradient(135deg,#F0F9FF,#E0F2FE,#EFF6FF)" type="button">Bầu trời</button>
+              <button class="bg-btn" data-bg="midnight" style="background:linear-gradient(135deg,#1a1a2e,#16213e,#0f3460)" type="button">Midnight</button>
+            </div>
+          </div>
+
+          <div class="setting-block">
+            <h4>🔤 Cỡ chữ</h4>
+            <div class="font-size-buttons" role="group" aria-label="Chọn cỡ chữ">
+              <button class="font-size-btn" data-fontsize="13" type="button">A Nhỏ</button>
+              <button class="font-size-btn active" data-fontsize="15" type="button">A Vừa</button>
+              <button class="font-size-btn" data-fontsize="17" type="button">A Lớn</button>
+            </div>
+          </div>
+
+          <div class="setting-block">
+            <h4>🔤 Font chữ</h4>
+            <div class="font-selector" role="group" aria-label="Chọn font chữ">
+              <button class="font-btn active" data-font="system" type="button">System</button>
+              <button class="font-btn" data-font="inter" type="button">Inter</button>
+              <button class="font-btn" data-font="merriweather" type="button">Merriweather</button>
+              <button class="font-btn" data-font="firacode" type="button">Fira Code</button>
+              <button class="font-btn" data-font="bevietnam" type="button">Be Vietnam</button>
+            </div>
+          </div>
+
+          <!-- Account & License -->
+          <div class="setting-block setting-block--wide">
+            <h4>👤 Tài khoản & Gói dịch vụ</h4>
+            <div class="account-info-panel" id="accountInfoPanel">
+              <div class="account-avatar-row">
+                <img class="account-avatar" id="settingsAvatar" src="" alt="" width="48" height="48" style="border-radius:50%;display:none">
+                <div>
+                  <div class="account-name" id="settingsUserName">Chưa đăng nhập</div>
+                  <div class="account-email" id="settingsUserEmail" style="font-size:12px;color:var(--text3)"></div>
+                </div>
+              </div>
+              <div class="license-status-panel" id="licenseStatusPanel">
+                <div class="license-tier" id="licenseTier">
+                  <span class="tier-badge tier-badge--free">FREE</span>
+                  <span style="font-size:12px;color:var(--text2)">Gói miễn phí</span>
+                </div>
+                <div class="license-limits" id="licenseLimits">
+                  <div class="limit-item">
+                    <span>Tin nhắn hôm nay:</span>
+                    <span id="msgUsageToday">0 / 10</span>
+                  </div>
+                  <div class="limit-item">
+                    <span>Nguồn tối đa:</span>
+                    <span>3 nguồn</span>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div class="license-input-row">
+              <input type="text" class="input" id="licenseKeyInput"
+                     placeholder="Nhập License Key để mở khóa Pro..." aria-label="License Key">
+              <button class="btn btn-primary btn-sm" data-action="activate-license" type="button">Kích hoạt</button>
+            </div>
+            <div class="settings-links">
+              <a href="https://tuongtandigital.com" target="_blank" rel="noopener" class="btn btn-secondary btn-sm">🌐 Website</a>
+              <a href="https://aistudio.google.com/app/apikey" target="_blank" rel="noopener" class="btn btn-secondary btn-sm">🔑 Lấy API Key miễn phí</a>
+              <button class="btn btn-secondary btn-sm" data-action="open-onboard" type="button">📚 Hướng dẫn sử dụng</button>
+              <button class="btn btn-danger btn-sm" data-action="reset-all-settings" type="button">🗑️ Reset cài đặt</button>
+            </div>
+          </div>
+
+          <!-- About -->
+          <div class="setting-block setting-block--wide">
+            <h4>ℹ️ Về ứng dụng</h4>
+            <div class="about-content">
+              <div class="about-logo-row">
+                <div class="about-logo-icon">T</div>
+                <div>
+                  <div style="font-weight:900;font-size:16px;color:var(--primary)">TuongTanDigital AI Suite</div>
+                  <div style="font-size:12px;color:var(--text2)">Version 3.0 — NotebookLM Nâng Cao</div>
+                </div>
+              </div>
+              <p style="font-size:13px;color:var(--text2);line-height:1.7;margin-top:10px">
+                Bộ công cụ AI toàn diện lấy cảm hứng từ <strong>NotebookLM</strong> của Google.
+                Kiến trúc RAG thực sự · Gemini 2.5 API · 100% miễn phí · Không cần backend.
+              </p>
+              <p style="font-size:11px;color:var(--text3);margin-top:8px">
+                © <span id="aboutYear"></span> <strong>TuongTanDigital</strong>. All rights reserved.
+              </p>
+            </div>
+          </div>
+
+        </div>
+      </div><!-- /tabSettings -->
+
+    </main><!-- /main-content -->
+
+    <!-- ===== BOTTOM NAVIGATION (Mobile only) ===== -->
+    <nav class="bottom-nav" id="bottomNav" role="tablist" aria-label="Điều hướng mobile">
+      <button class="bottom-nav-item active" role="tab" aria-selected="true" data-tab="notebook" type="button">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"/><path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"/></svg>
+        <span>Notebook</span>
+      </button>
+      <button class="bottom-nav-item" role="tab" data-tab="stt" type="button">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M12 1a3 3 0 0 0-3 3v8a3 3 0 0 0 6 0V4a3 3 0 0 0-3-3z"/><path d="M19 10v2a7 7 0 0 1-14 0v-2"/></svg>
+        <span>STT</span>
+      </button>
+      <button class="bottom-nav-item" role="tab" data-tab="tts" type="button">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"/><path d="M15.54 8.46a5 5 0 0 1 0 7.07"/></svg>
+        <span>TTS</span>
+      </button>
+      <button class="bottom-nav-item" role="tab" data-tab="rec" type="button">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><circle cx="12" cy="12" r="10"/><circle cx="12" cy="12" r="3"/></svg>
+        <span>Ghi hình</span>
+      </button>
+      <button class="bottom-nav-item" role="tab" data-tab="cvt" type="button">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><polyline points="17 1 21 5 17 9"/><path d="M3 11V9a4 4 0 0 1 4-4h14"/></svg>
+        <span>Convert</span>
+      </button>
+      <button class="bottom-nav-item" role="tab" data-tab="settings" type="button">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1-2.83 2.83l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-4 0v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83-2.83l.06-.06A1.65 1.65 0 0 0 4.68 15a1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1 0-4h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 2.83-2.83l.06.06A1.65 1.65 0 0 0 9 4.68a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 4 0v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 2.83l-.06.06A1.65 1.65 0 0 0 19.4 9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 0 4h-.09a1.65 1.65 0 0 0-1.51 1z"/></svg>
+        <span>Cài đặt</span>
+      </button>
+    </nav>
+
+    <!-- ===== FOOTER ===== -->
+    <footer class="app-footer" role="contentinfo">
+      <span>© <span id="footerYear"></span> <strong>TuongTanDigital</strong></span>
+      <span>·</span>
+      <span>AI Suite v3.0</span>
+      <span>·</span>
+      <span>Powered by Gemini 2.5</span>
+      <span>·</span>
+      <span>All rights reserved</span>
+    </footer>
+
+  </div><!-- /app-wrapper -->
+
+  <!-- ===================== TOAST CONTAINER ===================== -->
+  <div class="toast-wrap" id="toastWrap" role="status" aria-live="polite" aria-atomic="false"></div>
+
+  <!-- ===================== OVERLAYS / POPUPS ===================== -->
+
+  <!-- API Key Manager -->
+  <div class="overlay" id="overlayApiKeys" role="dialog" aria-modal="true" aria-labelledby="apiKeysTitle">
+    <div class="popup popup-lg">
+      <div class="popup-header">
+        <h3 id="apiKeysTitle">🔑 Quản lý API Keys Gemini</h3>
+        <button class="popup-close" data-action="close-overlay" data-overlay="overlayApiKeys" aria-label="Đóng" type="button">✕</button>
+      </div>
+      <div class="api-key-guide">
+        <p>Lấy API Key <strong>miễn phí</strong> tại:
+          <a href="https://aistudio.google.com/app/apikey" target="_blank" rel="noopener">aistudio.google.com/app/apikey</a>
+        </p>
+        <p>Thêm nhiều key để tự động xoay vòng khi bị giới hạn rate.</p>
+      </div>
+      <div class="key-list" id="keyList" role="list" aria-label="Danh sách API key"></div>
+      <div class="add-key-row">
+        <input type="password" class="input" id="newKeyInput"
+               placeholder="AIza... (dán API Key tại đây)" aria-label="Nhập API Key mới">
+        <button class="btn btn-primary btn-sm" data-action="add-api-key" type="button">➕ Thêm</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Text Source Input (Fixed: Nhập văn bản) -->
+  <div class="overlay" id="overlayTextSource" role="dialog" aria-modal="true" aria-labelledby="textSourceTitle">
+    <div class="popup popup-lg">
+      <div class="popup-header">
+        <h3 id="textSourceTitle">📝 Nhập văn bản trực tiếp</h3>
+        <button class="popup-close" data-action="close-overlay" data-overlay="overlayTextSource" aria-label="Đóng" type="button">✕</button>
+      </div>
+      <p style="font-size:13px;color:var(--text2);margin-bottom:12px">
+        Dán nội dung tài liệu, bài viết, ghi chú... Tối đa 50,000 ký tự.
+      </p>
+      <div style="margin-bottom:8px;display:flex;gap:8px">
+        <input type="text" class="input input--sm" id="textSourceName"
+               placeholder="Tên nguồn (VD: Tài liệu họp ngày 09/03)" aria-label="Tên nguồn văn bản" style="flex:1">
+        <button class="btn btn-secondary btn-sm" data-action="paste-from-clipboard" type="button">📋 Dán</button>
+      </div>
+      <textarea class="textarea" id="textSourceInput"
+                placeholder="Dán hoặc gõ nội dung văn bản tại đây..."
+                rows="12" maxlength="50000" aria-label="Nội dung văn bản nguồn"
+                style="min-height:260px"></textarea>
+      <div style="display:flex;justify-content:space-between;align-items:center;margin-top:6px">
+        <span id="textSourceCharCount" style="font-size:11px;color:var(--text3)" aria-live="polite">0 / 50,000 ký tự</span>
+        <div style="display:flex;gap:8px">
+          <button class="btn btn-secondary btn-sm" data-action="close-overlay" data-overlay="overlayTextSource" type="button">Hủy</button>
+          <button class="btn btn-primary btn-sm" data-action="confirm-add-text-source" type="button">✅ Thêm vào nguồn</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- URL Source Input -->
+  <div class="overlay" id="overlayUrlSource" role="dialog" aria-modal="true" aria-labelledby="urlSourceTitle">
+    <div class="popup">
+      <div class="popup-header">
+        <h3 id="urlSourceTitle">🌐 Thêm nguồn URL / YouTube</h3>
+        <button class="popup-close" data-action="close-overlay" data-overlay="overlayUrlSource" aria-label="Đóng" type="button">✕</button>
+      </div>
+      <p style="font-size:13px;color:var(--text2);margin-bottom:12px">
+        Nhập URL trang web hoặc link YouTube. Gemini sẽ phân tích nội dung trực tiếp.
+      </p>
+      <label class="lbl" for="urlSourceInput">URL TRANG WEB HOẶC YOUTUBE</label>
+      <input type="url" class="input" id="urlSourceInput"
+             placeholder="https://... hoặc https://youtube.com/watch?v=..."
+             aria-label="Nhập URL nguồn">
+      <div id="urlFetchStatus" style="font-size:11px;color:var(--info);margin-top:6px;display:none" aria-live="polite"></div>
+      <div style="display:flex;gap:8px;margin-top:14px;justify-content:flex-end">
+        <button class="btn btn-secondary btn-sm" data-action="close-overlay" data-overlay="overlayUrlSource" type="button">Hủy</button>
+        <button class="btn btn-primary btn-sm" data-action="confirm-add-url-source" type="button">➕ Thêm nguồn</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Document Viewer -->
+  <div class="overlay" id="overlayDocViewer" role="dialog" aria-modal="true" aria-labelledby="docViewerTitle">
+    <div class="popup popup-xl" style="height:85vh;display:flex;flex-direction:column">
+      <div class="popup-header">
+        <h3 id="docViewerTitle">📄 Xem tài liệu</h3>
+        <button class="popup-close" data-action="close-overlay" data-overlay="overlayDocViewer" aria-label="Đóng" type="button">✕</button>
+      </div>
+      <div id="docViewerContent" style="flex:1;overflow-y:auto;border-radius:var(--radius-sm);border:1px solid var(--border);padding:16px;background:var(--bg)"></div>
+    </div>
+  </div>
+
+  <!-- Flashcard Overlay (Fixed: up to 50 cards) -->
+  <div class="overlay" id="overlayFlashcard" role="dialog" aria-modal="true" aria-labelledby="flashcardTitle">
+    <div class="popup popup-lg">
+      <div class="popup-header">
+        <h3 id="flashcardTitle">🃏 Flashcard Học tập</h3>
+        <button class="popup-close" data-action="close-overlay" data-overlay="overlayFlashcard" aria-label="Đóng" type="button">✕</button>
+      </div>
+      <!-- Flashcard count selector -->
+      <div class="flashcard-setup" id="flashcardSetup">
+        <label class="lbl">SỐ LƯỢNG THẺ</label>
+        <div class="flashcard-count-row" role="group" aria-label="Chọn số lượng flashcard">
+          <button class="fc-count-btn" data-count="10" type="button">10 thẻ</button>
+          <button class="fc-count-btn active" data-count="20" type="button">20 thẻ</button>
+          <button class="fc-count-btn" data-count="30" type="button">30 thẻ</button>
+          <button class="fc-count-btn" data-count="50" type="button">50 thẻ</button>
+        </div>
+        <button class="btn btn-primary" id="btnGenerateFlashcards" data-action="generate-flashcards"
+                style="margin-top:12px" type="button">
+          🃏 Tạo Flashcard
+        </button>
+      </div>
+      <div id="flashcardContent" aria-live="polite"></div>
+    </div>
+  </div>
+
+  <!-- Compare Mode -->
+  <div class="overlay" id="overlayCompare" role="dialog" aria-modal="true" aria-labelledby="compareTitle">
+    <div class="popup popup-xl">
+      <div class="popup-header">
+        <h3 id="compareTitle">⚖️ So sánh tài liệu</h3>
+        <button class="popup-close" data-action="close-overlay" data-overlay="overlayCompare" aria-label="Đóng" type="button">✕</button>
+      </div>
+      <div style="display:flex;gap:12px;margin-bottom:14px;flex-wrap:wrap">
+        <div style="flex:1;min-width:140px">
+          <label class="lbl" for="cmpSrcA">TÀI LIỆU A</label>
+          <select class="select" id="cmpSrcA" aria-label="Chọn tài liệu A"></select>
+        </div>
+        <div style="flex:1;min-width:140px">
+          <label class="lbl" for="cmpSrcB">TÀI LIỆU B</label>
+          <select class="select" id="cmpSrcB" aria-label="Chọn tài liệu B"></select>
+        </div>
+        <div style="display:flex;align-items:flex-end">
+          <button class="btn btn-primary btn-sm" data-action="run-compare" type="button">🔍 So sánh ngay</button>
+        </div>
+      </div>
+      <div class="prog-wrap" id="compareProg" style="display:none">
+        <div class="prog-bg"><div class="prog-fill" id="compareProgFill"></div></div>
+        <div class="prog-txt" id="compareProgTxt"></div>
+      </div>
+      <div id="compareResult" style="display:none;max-height:50vh;overflow-y:auto;padding:14px;border-radius:var(--radius-sm);border:1px solid var(--border);background:var(--bg);font-size:13px;line-height:1.7" role="article" aria-label="Kết quả so sánh"></div>
+    </div>
+  </div>
+
+  <!-- Export Overlay -->
+  <div class="overlay" id="overlayExport" role="dialog" aria-modal="true" aria-labelledby="exportTitle">
+    <div class="popup">
+      <div class="popup-header">
+        <h3 id="exportTitle">⬇️ Xuất Notebook</h3>
+        <button class="popup-close" data-action="close-overlay" data-overlay="overlayExport" aria-label="Đóng" type="button">✕</button>
+      </div>
+      <div style="display:flex;flex-direction:column;gap:10px">
+        <button class="btn btn-secondary" data-action="export-notebook-md" type="button">📝 Xuất Markdown (.md)</button>
+        <button class="btn btn-secondary" data-action="export-notebook-txt" type="button">📄 Xuất văn bản (.txt)</button>
+        <button class="btn btn-secondary" data-action="export-notebook-docx" type="button">📋 Xuất Word (.docx)</button>
+        <button class="btn btn-secondary" data-action="export-notebook-json" type="button">💾 Xuất JSON Session</button>
+        <button class="btn btn-secondary" data-action="export-notebook-html" type="button">🌐 Xuất HTML Snapshot</button>
+        <div class="divider"></div>
+        <button class="btn btn-secondary" data-action="import-notebook-session" type="button">📥 Import JSON Session</button>
+        <input type="file" id="importSessionFile" accept=".json" style="display:none">
+      </div>
+    </div>
+  </div>
+
+  <!-- Podcast Generator Overlay -->
+  <div class="overlay" id="overlayPodcast" role="dialog" aria-modal="true" aria-labelledby="podcastTitle">
+    <div class="popup popup-lg">
+      <div class="popup-header">
+        <h3 id="podcastTitle">🎙️ Tạo Podcast AI</h3>
+        <button class="popup-close" data-action="close-overlay" data-overlay="overlayPodcast" aria-label="Đóng" type="button">✕</button>
+      </div>
+      <p style="font-size:13px;color:var(--text2);margin-bottom:14px">
+        AI sẽ tạo script hội thoại 2 nhân vật thảo luận về tài liệu của bạn, sau đó đọc bằng 2 giọng khác nhau.
+      </p>
+      <div class="podcast-config">
+        <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-bottom:12px">
+          <div>
+            <label class="lbl" for="podcastHost1">NHÂN VẬT 1 (HOST)</label>
+            <input type="text" class="input" id="podcastHost1" value="Minh" aria-label="Tên host 1">
+            <label class="lbl" for="podcastVoice1" style="margin-top:6px">GIỌNG ĐỌC</label>
+            <select class="select" id="podcastVoice1" aria-label="Giọng đọc nhân vật 1">
+              <option value="Charon">Charon (Nam, trầm)</option>
+              <option value="Orus">Orus (Nam, uy quyền)</option>
+              <option value="Fenrir">Fenrir (Nam, mạnh mẽ)</option>
+            </select>
+          </div>
+          <div>
+            <label class="lbl" for="podcastHost2">NHÂN VẬT 2 (GUEST)</label>
+            <input type="text" class="input" id="podcastHost2" value="Lan" aria-label="Tên host 2">
+            <label class="lbl" for="podcastVoice2" style="margin-top:6px">GIỌNG ĐỌC</label>
+            <select class="select" id="podcastVoice2" aria-label="Giọng đọc nhân vật 2">
+              <option value="Aoede">Aoede (Nữ, ấm áp)</option>
+              <option value="Kore">Kore (Nữ, trẻ trung)</option>
+              <option value="Leda">Leda (Nữ, nhẹ nhàng)</option>
+            </select>
+          </div>
+        </div>
+        <label class="lbl" for="podcastLength">ĐỘ DÀI PODCAST</label>
+        <select class="select" id="podcastLength" style="margin-bottom:12px" aria-label="Chọn độ dài podcast">
+          <option value="short">⚡ Ngắn (~2 phút, 400 từ)</option>
+          <option value="medium" selected>📻 Vừa (~5 phút, 800 từ)</option>
+          <option value="long">🎙️ Dài (~10 phút, 1500 từ)</option>
+        </select>
+      </div>
+      <div class="prog-wrap" id="podcastProg" style="display:none">
+        <div class="prog-bg"><div class="prog-fill" id="podcastProgFill"></div></div>
+        <div class="prog-txt" id="podcastProgTxt"></div>
+      </div>
+      <div id="podcastResult" style="display:none">
+        <div id="podcastScript" style="max-height:200px;overflow-y:auto;padding:12px;border-radius:var(--radius-sm);border:1px solid var(--border);background:var(--bg);font-size:12px;line-height:1.7;margin-bottom:10px" aria-label="Script podcast"></div>
+        <audio id="podcastAudio" controls style="width:100%;margin-bottom:8px" aria-label="Audio podcast"></audio>
+        <button class="btn btn-success" id="btnDownloadPodcast" data-action="download-podcast" type="button">⬇️ Tải về WAV</button>
+      </div>
+      <button class="btn btn-primary" id="btnGeneratePodcast" data-action="generate-podcast" type="button">
+        🎙️ TẠO PODCAST AI
+      </button>
+    </div>
+  </div>
+
+  <!-- Quiz Generator Overlay -->
+  <div class="overlay" id="overlayQuiz" role="dialog" aria-modal="true" aria-labelledby="quizTitle">
+    <div class="popup popup-lg">
+      <div class="popup-header">
+        <h3 id="quizTitle">📝 Bài kiểm tra từ tài liệu</h3>
+        <button class="popup-close" data-action="close-overlay" data-overlay="overlayQuiz" aria-label="Đóng" type="button">✕</button>
+      </div>
+      <div id="quizContent" aria-live="polite">
+        <div class="quiz-setup" id="quizSetup">
+          <label class="lbl" for="quizQuestionCount">SỐ CÂU HỎI</label>
+          <select class="select" id="quizQuestionCount" aria-label="Chọn số câu hỏi">
+            <option value="5">5 câu</option>
+            <option value="10" selected>10 câu</option>
+            <option value="15">15 câu</option>
+          </select>
+          <button class="btn btn-primary" data-action="generate-quiz" style="margin-top:12px" type="button">
+            📝 Tạo bài kiểm tra
+          </button>
+        </div>
+        <div id="quizQuestions" style="display:none" role="form" aria-label="Bài kiểm tra"></div>
+        <div id="quizResult" style="display:none" role="alert" aria-live="polite"></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Command Palette -->
+  <div class="overlay" id="overlayCommandPalette" role="dialog" aria-modal="true" aria-labelledby="commandPaletteTitle">
+    <div class="popup" style="max-width:560px;padding:0;overflow:hidden">
+      <div class="command-palette-search">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
+        <input type="search" id="commandInput" placeholder="Tìm lệnh, tính năng, notebook..."
+               aria-label="Tìm kiếm lệnh" autocomplete="off">
+        <kbd>ESC</kbd>
+      </div>
+      <div class="command-list" id="commandList" role="listbox" aria-label="Danh sách lệnh"></div>
+    </div>
+  </div>
+
+          <!-- Keyboard Shortcut Cheatsheet (tiếp theo từ điểm dừng) -->
+        <button class="popup-close" data-action="close-overlay" data-overlay="overlayShortcuts"
+                aria-label="Đóng" type="button">✕</button>
+      </div>
+      <div class="shortcuts-grid">
+        <div class="shortcut-group">
+          <h4 class="shortcut-group-title">🧭 Điều hướng</h4>
+          <div class="shortcut-item"><kbd>Ctrl</kbd>+<kbd>1</kbd>–<kbd>6</kbd><span>Chuyển tab</span></div>
+          <div class="shortcut-item"><kbd>Ctrl</kbd>+<kbd>K</kbd><span>Focus ô chat</span></div>
+          <div class="shortcut-item"><kbd>Ctrl</kbd>+<kbd>P</kbd><span>Bảng lệnh</span></div>
+          <div class="shortcut-item"><kbd>Ctrl</kbd>+<kbd>N</kbd><span>Notebook mới</span></div>
+          <div class="shortcut-item"><kbd>?</kbd><span>Phím tắt</span></div>
+          <div class="shortcut-item"><kbd>Esc</kbd><span>Đóng popup</span></div>
+        </div>
+        <div class="shortcut-group">
+          <h4 class="shortcut-group-title">💬 Chat & Notebook</h4>
+          <div class="shortcut-item"><kbd>Ctrl</kbd>+<kbd>Enter</kbd><span>Gửi tin nhắn</span></div>
+          <div class="shortcut-item"><kbd>Ctrl</kbd>+<kbd>E</kbd><span>Xuất notebook</span></div>
+          <div class="shortcut-item"><kbd>Ctrl</kbd>+<kbd>\</kbd><span>Split View</span></div>
+          <div class="shortcut-item"><kbd>Alt</kbd>+<kbd>F</kbd><span>Tạo Flashcard</span></div>
+          <div class="shortcut-item"><kbd>Alt</kbd>+<kbd>P</kbd><span>Tạo Podcast AI</span></div>
+          <div class="shortcut-item"><kbd>Alt</kbd>+<kbd>Q</kbd><span>Tạo Quiz</span></div>
+        </div>
+        <div class="shortcut-group">
+          <h4 class="shortcut-group-title">⚙️ Giao diện</h4>
+          <div class="shortcut-item"><kbd>Ctrl</kbd>+<kbd>D</kbd><span>Dark/Light mode</span></div>
+          <div class="shortcut-item"><kbd>Ctrl</kbd>+<kbd>S</kbd><span>Lưu session</span></div>
+          <div class="shortcut-item"><kbd>Ctrl</kbd>+<kbd>/</kbd><span>Phím tắt</span></div>
+          <div class="shortcut-item"><kbd>F11</kbd><span>Toàn màn hình</span></div>
+        </div>
+        <div class="shortcut-group">
+          <h4 class="shortcut-group-title">🎙️ TTS & STT</h4>
+          <div class="shortcut-item"><kbd>Space</kbd><span>Play/Pause TTS (khi focus)</span></div>
+          <div class="shortcut-item"><kbd>Alt</kbd>+<kbd>R</kbd><span>Bắt đầu/dừng ghi âm</span></div>
+          <div class="shortcut-item"><kbd>Alt</kbd>+<kbd>L</kbd><span>Real-time STT</span></div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Onboarding Tour Overlay -->
+  <div class="overlay" id="overlayOnboard" role="dialog" aria-modal="true" aria-labelledby="onboardTitle">
+    <div class="popup popup-lg">
+      <div class="popup-header">
+        <h3 id="onboardTitle">📚 Hướng dẫn sử dụng TuongTanDigital AI Suite</h3>
+        <button class="popup-close" data-action="close-overlay" data-overlay="overlayOnboard"
+                aria-label="Đóng" type="button">✕</button>
+      </div>
+
+      <!-- Step Progress -->
+      <div class="onboard-progress">
+        <div class="onboard-step-dots" id="onboardDots" role="tablist" aria-label="Các bước hướng dẫn"></div>
+        <span class="onboard-step-counter" id="onboardCounter">Bước 1 / 7</span>
+      </div>
+
+      <!-- Step Content -->
+      <div class="onboard-content" id="onboardContent" aria-live="polite"></div>
+
+      <!-- Navigation -->
+      <div class="onboard-nav">
+        <button class="btn btn-secondary btn-sm" id="onboardPrevBtn"
+                data-action="onboard-prev" type="button">← Trước</button>
+        <button class="btn btn-secondary btn-sm" id="onboardSkipBtn"
+                data-action="close-overlay" data-overlay="overlayOnboard" type="button">Bỏ qua</button>
+        <button class="btn btn-primary btn-sm" id="onboardNextBtn"
+                data-action="onboard-next" type="button">Tiếp theo →</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- History Overlay -->
+  <div class="overlay" id="overlayHistory" role="dialog" aria-modal="true" aria-labelledby="historyTitle">
+    <div class="popup popup-lg">
+      <div class="popup-header">
+        <h3 id="historyTitle">🕐 Lịch sử hoạt động</h3>
+        <button class="popup-close" data-action="close-overlay" data-overlay="overlayHistory"
+                aria-label="Đóng" type="button">✕</button>
+      </div>
+      <div class="hist-toolbar">
+        <input type="search" class="input input--sm" id="histSearchInput"
+               placeholder="🔍 Tìm trong lịch sử..." aria-label="Tìm kiếm lịch sử">
+        <select class="select select--sm" id="histFilterSelect" aria-label="Lọc theo loại">
+          <option value="">Tất cả</option>
+          <option value="stt">STT</option>
+          <option value="cvt">Convert</option>
+          <option value="chat">Chat</option>
+        </select>
+        <button class="btn btn-danger btn-sm" data-action="clear-all-history" type="button">
+          🗑️ Xóa tất cả
+        </button>
+      </div>
+      <div class="hist-list" id="fullHistList" role="list" aria-label="Danh sách lịch sử" style="max-height:50vh;overflow-y:auto">
+        <div class="empty-st">Chưa có lịch sử</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Account & License Overlay -->
+  <div class="overlay" id="overlayAccount" role="dialog" aria-modal="true" aria-labelledby="accountTitle">
+    <div class="popup popup-lg">
+      <div class="popup-header">
+        <h3 id="accountTitle">👤 Tài khoản & Gói dịch vụ</h3>
+        <button class="popup-close" data-action="close-overlay" data-overlay="overlayAccount"
+                aria-label="Đóng" type="button">✕</button>
+      </div>
+
+      <!-- User Info -->
+      <div class="account-profile-card" id="accountProfileCard">
+        <img class="account-profile-avatar" id="accountProfileAvatar" src="" alt="" width="56" height="56">
+        <div class="account-profile-info">
+          <div class="account-profile-name" id="accountProfileName">Người dùng</div>
+          <div class="account-profile-email" id="accountProfileEmail"></div>
+          <div class="account-profile-since" id="accountProfileSince"></div>
+        </div>
+      </div>
+
+      <!-- Current Plan -->
+      <div class="plan-card" id="planCard">
+        <div class="plan-header">
+          <span class="plan-name" id="planName">Gói FREE</span>
+          <span class="plan-badge" id="planBadge">FREE</span>
+        </div>
+        <div class="plan-features" id="planFeatures">
+          <div class="plan-feature-row plan-feature-row--used">
+            <span>Tin nhắn hôm nay</span>
+            <span id="planMsgUsage">0 / 10</span>
+          </div>
+          <div class="plan-feature-row">
+            <span>Nguồn tài liệu</span>
+            <span>Tối đa 3 nguồn</span>
+          </div>
+          <div class="plan-feature-row plan-feature-row--locked">
+            <span>🔒 Gemini TTS 30 giọng</span>
+            <span>Cần Pro</span>
+          </div>
+          <div class="plan-feature-row plan-feature-row--locked">
+            <span>🔒 Flashcard không giới hạn</span>
+            <span>Cần Pro</span>
+          </div>
+          <div class="plan-feature-row plan-feature-row--locked">
+            <span>🔒 Podcast AI</span>
+            <span>Cần Pro</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- License Key Activation -->
+      <div class="license-activation-box">
+        <h4 style="font-size:13px;font-weight:700;margin-bottom:10px">🔑 Kích hoạt License Key</h4>
+        <div class="license-input-group">
+          <input type="text" class="input" id="licenseKeyActivation"
+                 placeholder="TTD-XXXX-XXXX-XXXX" aria-label="Nhập License Key Pro">
+          <button class="btn btn-primary btn-sm" data-action="activate-license-account" type="button">
+            Kích hoạt
+          </button>
+        </div>
+        <div id="licenseActivationStatus" style="font-size:12px;margin-top:6px" aria-live="polite"></div>
+      </div>
+
+      <!-- Usage Statistics -->
+      <div class="usage-stats-box">
+        <h4 style="font-size:13px;font-weight:700;margin-bottom:10px">📊 Thống kê sử dụng</h4>
+        <div class="usage-grid" id="usageGrid">
+          <div class="usage-stat">
+            <div class="usage-stat-num" id="statTotalChats">0</div>
+            <div class="usage-stat-label">Tin nhắn chat</div>
+          </div>
+          <div class="usage-stat">
+            <div class="usage-stat-num" id="statTotalStt">0</div>
+            <div class="usage-stat-label">Phiên âm</div>
+          </div>
+          <div class="usage-stat">
+            <div class="usage-stat-num" id="statTotalConvert">0</div>
+            <div class="usage-stat-label">Chuyển đổi</div>
+          </div>
+          <div class="usage-stat">
+            <div class="usage-stat-num" id="statTotalNotebooks">0</div>
+            <div class="usage-stat-label">Notebooks</div>
+          </div>
+        </div>
+      </div>
+
+      <div style="display:flex;gap:8px;flex-wrap:wrap">
+        <a href="https://tuongtandigital.com/pro" target="_blank" rel="noopener"
+           class="btn btn-primary btn-sm">⭐ Nâng cấp Pro</a>
+        <a href="mailto:support@tuongtandigital.com" class="btn btn-secondary btn-sm">
+          💬 Liên hệ hỗ trợ
+        </a>
+      </div>
+    </div>
+  </div>
+
+  <!-- Prompt Library Overlay -->
+  <div class="overlay" id="overlayPromptLibrary" role="dialog" aria-modal="true" aria-labelledby="promptLibTitle">
+    <div class="popup popup-xl">
+      <div class="popup-header">
+        <h3 id="promptLibTitle">📚 Thư viện Prompt mẫu</h3>
+        <button class="popup-close" data-action="close-overlay" data-overlay="overlayPromptLibrary"
+                aria-label="Đóng" type="button">✕</button>
+      </div>
+      <input type="search" class="input" id="promptSearchInput"
+             placeholder="🔍 Tìm kiếm prompt..." aria-label="Tìm kiếm prompt" style="margin-bottom:12px">
+      <div class="prompt-category-tabs" id="promptCategoryTabs" role="tablist" aria-label="Danh mục prompt"></div>
+      <div class="prompt-grid" id="promptGrid" role="list" aria-label="Danh sách prompt mẫu"></div>
+
+      <div class="divider"></div>
+      <div>
+        <h4 style="font-size:12px;font-weight:700;color:var(--text2);margin-bottom:8px">
+          📌 PROMPT CỦA TÔI
+        </h4>
+        <div class="my-prompts-list" id="myPromptsList" role="list" aria-label="Prompt tùy chỉnh"></div>
+        <div style="display:flex;gap:8px;margin-top:8px">
+          <input type="text" class="input input--sm" id="myPromptInput"
+                 placeholder="Tên prompt tùy chỉnh..." aria-label="Tên prompt mới">
+          <textarea class="textarea" id="myPromptContent" rows="2"
+                    placeholder="Nội dung prompt..." aria-label="Nội dung prompt mới" style="flex:1"></textarea>
+          <button class="btn btn-primary btn-sm" data-action="save-my-prompt" type="button">Lưu</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Notes Board Overlay (T-C6: Pinned Notes) -->
+  <div class="overlay" id="overlayNotes" role="dialog" aria-modal="true" aria-labelledby="notesTitle">
+    <div class="popup popup-lg">
+      <div class="popup-header">
+        <h3 id="notesTitle">📌 Ghi chú & Ghim</h3>
+        <button class="popup-close" data-action="close-overlay" data-overlay="overlayNotes"
+                aria-label="Đóng" type="button">✕</button>
+      </div>
+
+      <!-- Add Manual Note -->
+      <div class="notes-add-row">
+        <textarea class="textarea" id="manualNoteInput" rows="3"
+                  placeholder="Thêm ghi chú tay tại đây..."
+                  aria-label="Nhập ghi chú mới"></textarea>
+        <div style="display:flex;gap:8px;margin-top:6px;justify-content:flex-end">
+          <select class="select select--sm" id="noteTagSelect" aria-label="Chọn tag ghi chú">
+            <option value="important">🔴 Quan trọng</option>
+            <option value="reference">🟡 Tham khảo</option>
+            <option value="done">🟢 Đã xem</option>
+            <option value="draft">🔵 Nháp</option>
+          </select>
+          <button class="btn btn-primary btn-sm" data-action="add-manual-note" type="button">
+            ➕ Thêm ghi chú
+          </button>
+        </div>
+      </div>
+
+      <!-- Notes Filter -->
+      <div class="notes-filter-row">
+        <button class="notes-filter-btn active" data-note-filter="all" type="button">Tất cả</button>
+        <button class="notes-filter-btn" data-note-filter="important" type="button">🔴 Quan trọng</button>
+        <button class="notes-filter-btn" data-note-filter="reference" type="button">🟡 Tham khảo</button>
+        <button class="notes-filter-btn" data-note-filter="done" type="button">🟢 Đã xem</button>
+        <button class="notes-filter-btn" data-note-filter="draft" type="button">🔵 Nháp</button>
+      </div>
+
+      <!-- Notes List -->
+      <div class="notes-list" id="notesList" role="list" aria-label="Danh sách ghi chú"
+           style="max-height:45vh;overflow-y:auto">
+        <div class="empty-st">Chưa có ghi chú. Ghim câu trả lời AI hoặc thêm ghi chú tay.</div>
+      </div>
+
+      <div style="display:flex;gap:8px;margin-top:12px">
+        <button class="btn btn-secondary btn-sm" data-action="export-notes-md" type="button">
+          📝 Xuất Markdown
+        </button>
+        <button class="btn btn-secondary btn-sm" data-action="export-notes-txt" type="button">
+          📄 Xuất TXT
+        </button>
+        <button class="btn btn-danger btn-sm" data-action="clear-all-notes" type="button">
+          🗑️ Xóa tất cả
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Visual Mind Map Overlay (T-N1) -->
+  <div class="overlay" id="overlayMindMap" role="dialog" aria-modal="true" aria-labelledby="mindMapTitle">
+    <div class="popup popup-xl" style="height:90vh;display:flex;flex-direction:column">
+      <div class="popup-header">
+        <h3 id="mindMapTitle">🗺️ Mind Map Tương tác</h3>
+        <div style="display:flex;gap:8px">
+          <button class="btn btn-secondary btn-sm" data-action="mindmap-zoom-in" type="button">🔍+</button>
+          <button class="btn btn-secondary btn-sm" data-action="mindmap-zoom-out" type="button">🔍-</button>
+          <button class="btn btn-secondary btn-sm" data-action="mindmap-reset" type="button">⟳ Reset</button>
+          <button class="btn btn-success btn-sm" data-action="mindmap-export-png" type="button">
+            ⬇️ PNG
+          </button>
+        </div>
+        <button class="popup-close" data-action="close-overlay" data-overlay="overlayMindMap"
+                aria-label="Đóng" type="button">✕</button>
+      </div>
+      <div class="mindmap-container" id="mindMapContainer" style="flex:1;overflow:hidden;position:relative">
+        <svg id="mindMapSvg" width="100%" height="100%"
+             role="img" aria-label="Sơ đồ tư duy"></svg>
+        <div class="mindmap-loading" id="mindMapLoading" style="display:none">
+          <div class="spin spin-dark" style="width:32px;height:32px"></div>
+          <p>Đang tạo Mind Map...</p>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Glossary Overlay (T-AI4) -->
+  <div class="overlay" id="overlayGlossary" role="dialog" aria-modal="true" aria-labelledby="glossaryTitle">
+    <div class="popup popup-lg">
+      <div class="popup-header">
+        <h3 id="glossaryTitle">📖 Từ điển thuật ngữ</h3>
+        <button class="popup-close" data-action="close-overlay" data-overlay="overlayGlossary"
+                aria-label="Đóng" type="button">✕</button>
+      </div>
+      <input type="search" class="input" id="glossarySearchInput"
+             placeholder="🔍 Tìm thuật ngữ..." aria-label="Tìm thuật ngữ" style="margin-bottom:12px">
+      <div id="glossaryContent" aria-live="polite" style="max-height:55vh;overflow-y:auto"></div>
+      <div style="display:flex;gap:8px;margin-top:12px">
+        <button class="btn btn-secondary btn-sm" data-action="export-glossary-txt" type="button">
+          📄 Xuất TXT
+        </button>
+        <button class="btn btn-secondary btn-sm" data-action="export-glossary-docx" type="button">
+          📋 Xuất DOCX
+        </button>
+        <button class="btn btn-success btn-sm" data-action="add-glossary-to-notebook" type="button">
+          ➕ Thêm vào Notebook
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Citation Generator Overlay (T-AI5) -->
+  <div class="overlay" id="overlayCitation" role="dialog" aria-modal="true" aria-labelledby="citationTitle">
+    <div class="popup popup-lg">
+      <div class="popup-header">
+        <h3 id="citationTitle">📌 Tạo trích dẫn học thuật</h3>
+        <button class="popup-close" data-action="close-overlay" data-overlay="overlayCitation"
+                aria-label="Đóng" type="button">✕</button>
+      </div>
+      <div style="display:flex;gap:8px;margin-bottom:14px">
+        <button class="citation-style-btn active" data-citation-style="apa" type="button">APA 7th</button>
+        <button class="citation-style-btn" data-citation-style="mla" type="button">MLA 9th</button>
+        <button class="citation-style-btn" data-citation-style="chicago" type="button">Chicago</button>
+      </div>
+      <div id="citationList" role="list" aria-label="Danh sách trích dẫn"
+           style="max-height:45vh;overflow-y:auto"></div>
+      <div style="display:flex;gap:8px;margin-top:12px">
+        <button class="btn btn-secondary btn-sm" data-action="copy-all-citations" type="button">
+          📋 Sao chép tất cả
+        </button>
+        <button class="btn btn-secondary btn-sm" data-action="export-citations-txt" type="button">
+          📄 Xuất TXT
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Sentiment Analyzer Overlay (T-AI6) -->
+  <div class="overlay" id="overlaySentiment" role="dialog" aria-modal="true" aria-labelledby="sentimentTitle">
+    <div class="popup popup-lg">
+      <div class="popup-header">
+        <h3 id="sentimentTitle">📊 Phân tích cảm xúc & Tone</h3>
+        <button class="popup-close" data-action="close-overlay" data-overlay="overlaySentiment"
+                aria-label="Đóng" type="button">✕</button>
+      </div>
+      <div id="sentimentContent" aria-live="polite"></div>
+    </div>
+  </div>
+
+  <!-- Help System Tooltip (T-H1: In-app help) -->
+  <div class="help-tooltip" id="helpTooltip" role="tooltip" aria-live="polite" style="display:none"></div>
+
+  <!-- Source Context Menu -->
+  <div class="context-menu" id="sourceContextMenu" role="menu" aria-label="Menu nguồn tài liệu" style="display:none">
+    <button class="context-menu-item" data-context-action="preview-source" role="menuitem" type="button">
+      👁️ Xem trước
+    </button>
+    <button class="context-menu-item" data-context-action="tag-source-important" role="menuitem" type="button">
+      🔴 Đánh dấu Quan trọng
+    </button>
+    <button class="context-menu-item" data-context-action="tag-source-reference" role="menuitem" type="button">
+      🟡 Đánh dấu Tham khảo
+    </button>
+    <button class="context-menu-item" data-context-action="tag-source-done" role="menuitem" type="button">
+      🟢 Đánh dấu Đã xem
+    </button>
+    <div class="context-menu-divider"></div>
+    <button class="context-menu-item" data-context-action="duplicate-source" role="menuitem" type="button">
+      📋 Nhân đôi
+    </button>
+    <button class="context-menu-item context-menu-item--danger" data-context-action="remove-source"
+            role="menuitem" type="button">
+      🗑️ Xóa nguồn
+    </button>
+  </div>
+
+  <!-- PWA Install Banner -->
+  <div class="pwa-install-banner" id="pwaInstallBanner" style="display:none" role="banner">
+    <div class="pwa-install-content">
+      <div class="pwa-install-icon">T</div>
+      <div class="pwa-install-text">
+        <strong>Cài TuongTanDigital AI</strong>
+        <span>Truy cập nhanh hơn, dùng offline</span>
+      </div>
+    </div>
+    <div class="pwa-install-actions">
+      <button class="btn btn-primary btn-sm" id="btnInstallPwa" type="button">Cài đặt</button>
+      <button class="btn btn-secondary btn-sm" id="btnDismissPwa" type="button">Để sau</button>
+    </div>
+  </div>
+
+  <!-- ===================== SCRIPTS ===================== -->
+  <!-- docx.js for DOCX export (T-N4) -->
+  <script src="https://unpkg.com/docx@8.5.0/build/index.js"></script>
+
+  <!-- JSZip for batch download -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.10.1/jszip.min.js"></script>
+
+  <!-- Main App Script -->
+  <script src="app.js"></script>
+
+</body>
+</html>

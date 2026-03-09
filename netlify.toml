@@ -1,0 +1,56 @@
+# ============================================================
+# TuongTanDigital-AI v3.0 — Netlify Configuration
+# ============================================================
+
+[build]
+  publish = "."
+  command = "echo 'Static site — no build needed'"
+
+# Redirect all routes to index.html (SPA support)
+[[redirects]]
+  from   = "/*"
+  to     = "/index.html"
+  status = 200
+
+# Security headers
+[[headers]]
+  for = "/*"
+  [headers.values]
+    X-Frame-Options            = "SAMEORIGIN"
+    X-XSS-Protection           = "1; mode=block"
+    X-Content-Type-Options     = "nosniff"
+    Referrer-Policy            = "strict-origin-when-cross-origin"
+    Permissions-Policy         = "camera=(), microphone=(self), geolocation=()"
+    Content-Security-Policy    = """
+      default-src 'self';
+      script-src 'self' 'unsafe-inline' https://accounts.google.com https://apis.google.com https://unpkg.com https://cdn.jsdelivr.net https://cdnjs.cloudflare.com;
+      style-src 'self' 'unsafe-inline' https://fonts.googleapis.com;
+      font-src 'self' https://fonts.gstatic.com;
+      img-src 'self' data: https: blob:;
+      connect-src 'self' https://generativelanguage.googleapis.com https://accounts.google.com https://script.google.com https://script.googleusercontent.com;
+      frame-src https://accounts.google.com;
+      worker-src 'self' blob:;
+      media-src 'self' blob: data:;
+    """
+
+# Cache static assets
+[[headers]]
+  for = "/style.css"
+  [headers.values]
+    Cache-Control = "public, max-age=31536000, immutable"
+
+[[headers]]
+  for = "/app.js"
+  [headers.values]
+    Cache-Control = "public, max-age=31536000, immutable"
+
+[[headers]]
+  for = "/manifest.json"
+  [headers.values]
+    Cache-Control = "public, max-age=86400"
+
+# Service Worker — no cache
+[[headers]]
+  for = "/sw.js"
+  [headers.values]
+    Cache-Control = "no-cache, no-store, must-revalidate"

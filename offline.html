@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Offline — TuongTanDigital-AI</title>
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    body {
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      background: linear-gradient(135deg, #0f0f1a 0%, #1a1a2e 100%);
+      color: #ffffff;
+      font-family: system-ui, sans-serif;
+      text-align: center;
+      padding: 2rem;
+    }
+    .logo {
+      width: 80px; height: 80px;
+      background: linear-gradient(135deg, #7c3aed, #2563eb);
+      border-radius: 20px;
+      display: flex; align-items: center; justify-content: center;
+      font-size: 2.5rem; font-weight: bold;
+      margin: 0 auto 1.5rem;
+    }
+    h1 { font-size: 1.8rem; margin-bottom: 1rem; }
+    p  { color: #a0a0b8; margin-bottom: 2rem; max-width: 400px; line-height: 1.6; }
+    button {
+      background: linear-gradient(135deg, #7c3aed, #2563eb);
+      color: white; border: none; padding: 0.8rem 2rem;
+      border-radius: 50px; font-size: 1rem; cursor: pointer;
+    }
+  </style>
+</head>
+<body>
+  <div class="logo">T</div>
+  <h1>📶 Bạn đang offline</h1>
+  <p>TuongTanDigital-AI cần kết nối internet để hoạt động. Vui lòng kiểm tra kết nối mạng và thử lại.</p>
+  <button onclick="window.location.reload()">🔄 Thử lại</button>
+</body>
+</html>
